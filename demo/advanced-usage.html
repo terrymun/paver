@@ -45,7 +45,7 @@
 			<h3 id="enabling-meta">Enabling meta</h3>
 			<p>Title and description of the panorama can be stored in the <code>title</code> and <code>alt</code> attributes respectively. When you enable meta, by using <code>meta: true</code> or <code>data-meta="true"</code>, Paver will inject and overlay metadata over the panorama. The metadata will fade away, by default, when the user interacts with the panorama. However, this effect/interaction can be further customized by the user using CSS.</p>
 			<figure>
-				<div data-paver data-meta="true"><img src="../images/p4.jpg" title="Of foggy mornings" alt="We crawled out of our beds in the wee hours of the morning, braved the narrow, muddy roads leading into the depths of the tea plantation." /></div>
+				<div data-paver data-meta="true"><img src="./images/p4.jpg" title="Of foggy mornings" alt="We crawled out of our beds in the wee hours of the morning, braved the narrow, muddy roads leading into the depths of the tea plantation." /></div>
 			</figure>
 			<ul id="meta-styles">
 				<li><a href="#" class="active"><div class="paver__meta1" data-meta-class="paver__meta1"><span class="paver__title">Title</span><span class="paver__desc">Description</span></div></a></li>
@@ -57,7 +57,7 @@
 			<h3 id="something-other-than-a-central-position">Something other than a central position</h3>
 			<p>The panorama below uses the <code><a href="usage-notes.html#config__start-position">data-start-position</a>="0.25"</code> attribute to override the default setting, and the center point is placed one quarter from the left of the image:</p>
 			<figure>
-				<div data-paver data-start-position="0.25"><img src="../images/p3.jpg" title="At Brabrand S&oslash;" alt="Taking a break from a 38km bicycle ride by the scenic lake in the neighbourhood of Brabrand, Aarhus, Denmark." /></div>
+				<div data-paver data-start-position="0.25"><img src="./images/p3.jpg" title="At Brabrand S&oslash;" alt="Taking a break from a 38km bicycle ride by the scenic lake in the neighbourhood of Brabrand, Aarhus, Denmark." /></div>
 				<figcaption>
 					<span class="title">At Brabrand S&oslash;</span>
 					<span class="desc">Taking a break from a 38km bicycle ride by the scenic lake in the neighbourhood of Brabrand, Aarhus, Denmark.</span>
@@ -75,7 +75,7 @@ var p = $(selector).paver();
 p.data('plugin_paver').destroy();</code></pre><p>The choice to sacrifice direct chainability (i.e. <code>.paver().destroy()</code> is to preserve the ability to chain further methods.</p></li>
 			</ul>
 			<figure>
-				<div data-paver id="to-toggle"><img src="../images/p6.jpg" title="Spring Yoga at Risskov Forest" alt="As the sunny days of summer approaches, I attended the first outdoor yoga session at the local park. We had a blast!" /></div>
+				<div data-paver id="to-toggle"><img src="./images/p6.jpg" title="Spring Yoga at Risskov Forest" alt="As the sunny days of summer approaches, I attended the first outdoor yoga session at the local park. We had a blast!" /></div>
 				<figcaption>
 					<span class="title">Spring Yoga at Risskov Forest</span>
 					<span class="desc">As the sunny days of summer approaches, I attended the first outdoor yoga session at the local park. We had a blast!</span>
@@ -87,7 +87,7 @@ p.data('plugin_paver').destroy();</code></pre><p>The choice to sacrifice direct 
 			</form>
 			<p>The Paver instance above was initialized using the following code:</p>
 			<pre class="language-markup"><code>&lt;div data-paver id=&quot;to-destroy&quot;&gt;
-    &lt;img src=&quot;../images/p6.jpg&quot;
+    &lt;img src=&quot;./images/p6.jpg&quot;
          title=&quot;Spring Yoga at Risskov Forest&quot;
          alt=&quot;As the sunny days of summer approaches, I attended the first outdoor yoga session at the local park. We had a blast!&quot; /&gt;
 &lt;/div&gt;</code></pre>
@@ -105,7 +105,7 @@ $(selector).paver('destroy');
 $(selector).trigger('destroy.paver');</code></pre>
 			<p class="user-message note">I strongly recommend calling public events on Paver instances <em>after</em> it is ready, i.e. after the <code>ready.paver</code> event is fired. You can do this by listening to the custom namespaced events, and disabling user interactions (if any) until Paver is ready. With the example above, I am using a checkbox to toggle initialization and destruction of Paver:</p>
 			<pre class="language-markup"><code>&lt;div data-paver id=&quot;to-toggle&quot;&gt;
-    &lt;img src=&quot;../images/p6.jpg&quot; title=&quot;...&quot; alt=&quot;...&quot; /&gt;
+    &lt;img src=&quot;./images/p6.jpg&quot; title=&quot;...&quot; alt=&quot;...&quot; /&gt;
 &lt;/div&gt;
 &lt;form&gt;
     &lt;input type=&quot;checkbox&quot; id=&quot;paver-toggle&quot; disabled /&gt;
