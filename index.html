@@ -49,7 +49,7 @@
 	}
 }</code></pre>
 			<figure>
-				<div class="panorama"><img src="../images/p5.jpg" title="Sunset at N&oslash;rre Lyngby, Nordjylland" alt="We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun." /></div>
+				<div class="panorama"><img src="./demo/images/p5.jpg" title="Sunset at N&oslash;rre Lyngby, Nordjylland" alt="We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun." /></div>
 				<figcaption>
 					<span class="title">Sunset at N&oslash;rre Lyngby, Nordjylland</span>
 					<span class="desc">We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun.</span>
@@ -57,7 +57,7 @@
 			</figure>
 			<p>Looks good! However, it requires user to drag the scrollbar in order to pan around the panorama. What if we can exploit mouse movement, and even device orientation/rotation, to enhance the user experience of panorama viewing? That is why Paver was developed. And here is the <em>same</em> panorama, with Paver enabled, working on the <em>exact same markup</em> as the panorama above:</p>
 			<figure>
-				<div class="panorama" data-paver data-start-position="0"><img src="../images/p5.jpg" title="Sunset at N&oslash;rre Lyngby, Nordjylland" alt="We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun." /></div>
+				<div class="panorama" data-paver data-start-position="0"><img src="./demo/images/p5.jpg" title="Sunset at N&oslash;rre Lyngby, Nordjylland" alt="We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun." /></div>
 				<figcaption>
 					<span class="title">Sunset at N&oslash;rre Lyngby, Nordjylland</span>
 					<span class="desc">We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun.</span>
@@ -107,7 +107,7 @@
 			<p>A simple demo of how Paver works. You can resize the viewport to your liking, and Paver will automatically recalculate and recompute all necessary bits and pieces that make it work. The following panorama follows the suggested markup as specified above, but nested within a <code>&lt;figure&gt;</code> element to give context to the caption:</p>
 			<pre class="language-markup"><code>&lt;figure&gt;
     &lt;div data-paver&gt;
-        &lt;img src=&quot;../images/p1.jpg&quot; title=&quot;Sunset in the heart of Aarhus&quot; alt=&quot;A panorama taken from the roof of my penthouse unit in the center of Aarhus.&quot; /&gt;
+        &lt;img src=&quot;./demo/images/p1.jpg&quot; title=&quot;Sunset in the heart of Aarhus&quot; alt=&quot;A panorama taken from the roof of my penthouse unit in the center of Aarhus.&quot; /&gt;
     &lt;/div&gt;
     &lt;figcaption&gt;Sunset in the heart of Aarhus&amp;mdash;A panorama taken from the roof of my penthouse unit in the center of Aarhus.&lt;/figcaption&gt;
 &lt;/figure&gt;</code></pre>
@@ -116,7 +116,7 @@
     $(&#39;div[data-paver]&#39;).paver();
 });</code></pre>
 			<figure>
-				<div data-paver><img src="../images/p1.jpg" title="The Aarhusian Sunset" alt="A panorama taken from the roof of my penthouse unit in the heart of Aarhus." /></div>
+				<div data-paver><img src="./demo/images/p1.jpg" title="The Aarhusian Sunset" alt="A panorama taken from the roof of my penthouse unit in the heart of Aarhus." /></div>
 				<figcaption>
 					<span class="title">The Aarhusian Sunset</span>
 					<span class="desc">A panorama taken from the roof of my penthouse unit in the heart of Aarhus.</span>
@@ -142,7 +142,7 @@
 				</li>
 			</ul>
 			<figure>
-				<div data-paver><img src="../images/p2.jpg" title="Godsbanen" alt="A Sunday morning walk to the rooftop of Godsbanen, Aarhus." /></div>
+				<div data-paver><img src="./demo/images/p2.jpg" title="Godsbanen" alt="A Sunday morning walk to the rooftop of Godsbanen, Aarhus." /></div>
 				<figcaption>
 					<span class="title">Godsbanen</span>
 					<span class="desc">A Sunday morning walk to the rooftop of Godsbanen, Aarhus.</span>
@@ -179,7 +179,7 @@
 		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
 		<script type="text/javascript" src="./jquery.paver.min.js"></script>
-		<script type="text/javascript" src="./js/functions.js"></script>
+		<script type="text/javascript" src="./demo/js/functions.js"></script>
 		<script type="text/javascript">
 			$(function () {
 				// Paver
