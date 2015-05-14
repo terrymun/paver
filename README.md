@@ -1,5 +1,5 @@
 # Paver
-[![Build Status](https://travis-ci.org/terrymun/paver.svg?branch=master)](https://travis-ci.org/terrymun/paver) ![Latest Github release](https://img.shields.io/github/release/terrymun/paver.svg?style=flat) ![Average issue resolution time](http://img.shields.io/badge/Issues%20Closed%20In-about%2015%20hours-green.svg?style=flat)
+[![Build Status](https://travis-ci.org/terrymun/paver.svg?branch=master)](https://travis-ci.org/terrymun/paver) ![Latest Github release](https://img.shields.io/github/release/terrymun/paver.svg?style=flat)
 
 Replicating the photo viewer/panner seen on the experimental Facebook Pages app. [View demo here](http://terrymun.github.io/paver/).
 
