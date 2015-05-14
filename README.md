@@ -53,8 +53,6 @@ Paver reacts to viewport size changes, and is smart enough to determine when pan
 ### Graceful degradation
 No JS? No problem—with the basic styles in place, your panorama can still be viewed in its all its beauty even when the end-user have JavaScript turned off in their browser. Paver also offers the option to [display failure messages](http://terrymun.github.io/paver/demo/usage-notes.html#config__failure-message) when gyroscopic data is unavailable on mobile, touch-based devices.
 
-----
-
 ## Installation
 To install Paver, you will have to include the following resources in your page. The JS files should be loaded in the order stipulated below. For the CSS file, you can either incorporate it with your site's stylesheet, or load it externally through the `<link>` element in `<head>`.
 
@@ -143,7 +141,6 @@ For examples of advanced usage, please refer to the [Advanced Usage](http://terr
 ### Custom triggers
 Paver supports custom triggers, which allows developers to force recomputation of the panorama wrapper dimensions in the event of user-interaction. In addition, Paver will also fire custom events to allow developers to track the initialization progress of the plugin. Please refer to [Custom Triggers & Events](http://terrymun.github.io/paver/demo/custom-triggers-events.html) for more information.
 
-----
 
 ## Frequently Asked Questions
 1.  **Paver is not working in my installation. Where should I start?**  
