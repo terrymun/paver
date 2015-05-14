@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Paver, a jQuery plugin for easy panorama viewing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" media="all" rel="stylesheet" />
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700|PT+Serif:400italic" rel="stylesheet" type="text/css">
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" media="all" rel="stylesheet" />
+	<link rel="stylesheet" href="./css/style.css" />
+	<link rel="stylesheet" href="../css/paver.css" />
+
+	<link rel="author" href="https://plus.google.com/+TerryMun/"></link>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,"script","//www.google-analytics.com/analytics.js","ga");
+		ga("create", "UA-46830269-1", "terrymun.github.io");
+		ga("send", "pageview");
+	</script>
+
+</head>
+<body>
+	<header>
+		<div>
+			<h1><a href="index.html" title="Paver Home">Paver.</a></h1>
+			<span class="byline">Replicating the photo viewer/panner seen on the experimental Facebook Pages app</span>
+		</div>
+	</header>
+
+	<main id="content">
+		<section>
+			<h2 id="introduction">Introduction</h2>
+			<p><strong>Paver</strong> was initially a simple personal project to make panoramas more accessible. After upgrading from an iPhone 4 to a spanking new 6, I unlocked the world of panoramas made by a single, steady wave of the hand. Panoramas are breathtakingly beautiful when used correctly, but I have always been frustrated with how the default screens, in aspect ratios that are largely incompatible with the ultrawide format of panoramas, don't do these work much justice.</p>
+			<h3 id="conundrum">The conundrum</h3>
+			<p>There is indeed an extremely lightweight way of displaying panoramas on a page&mdash;you simply wrap it within a container which allows content to oveflow along the x-axis. The markup is straightfoward:</p>
+			<pre class="language-markup" id="basic-markup"><code>&lt;div class="panorama"&gt;
+    &lt;img src=&quot;/path/to/image&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;
+&lt;/div&gt;</code></pre>
+			<p>&hellip;and the CSS (in SASS/SCSS flavour) would look something like this:</p>
+			<pre class="language-scss" id="basic-styles"><code>.panorama {
+	height: 400px;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	img {
+		height: 100%;
+	}
+}</code></pre>
+			<figure>
+				<div class="panorama"><img src="../images/p5.jpg" title="Sunset at N&oslash;rre Lyngby, Nordjylland" alt="We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun." /></div>
+				<figcaption>
+					<span class="title">Sunset at N&oslash;rre Lyngby, Nordjylland</span>
+					<span class="desc">We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun.</span>
+				</figcaption>
+			</figure>
+			<p>Looks good! However, it requires user to drag the scrollbar in order to pan around the panorama. What if we can exploit mouse movement, and even device orientation/rotation, to enhance the user experience of panorama viewing? That is why Paver was developed. And here is the <em>same</em> panorama, with Paver enabled, working on the <em>exact same markup</em> as the panorama above:</p>
+			<figure>
+				<div class="panorama" data-paver data-start-position="0"><img src="../images/p5.jpg" title="Sunset at N&oslash;rre Lyngby, Nordjylland" alt="We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun." /></div>
+				<figcaption>
+					<span class="title">Sunset at N&oslash;rre Lyngby, Nordjylland</span>
+					<span class="desc">We stood at the precipice of the sandy cliffs, in awe of the beautiful setting sun.</span>
+				</figcaption>
+			</figure>
+		</section>
+		<section>
+			<h2 id="how-does-it-work">How does it work?</h2>
+			<p>There are two parts to how Paver works&mdash;firstly, it converts a simple markup, which is essentially an image wrapped in a division element, into something that the plugin can further work with. When that is done, it uses JS to listen to several events that will indicate how the user would want the panorama viewport be positioned.</p>
+			<h3>Markup replacement</h3>
+			<p>Paver works by replacing your markup, which would look something like this:</p>
+			<pre class="language-markup"><code>&lt;div&gt;
+    &lt;img src=&quot;/path/to/image&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;
+&lt;/div&gt;</code></pre>
+			<p>&hellip;into&hellip;</p>
+			<pre class="language-markup"><code>&lt;div class=&quot;paver--init paver--ready&quot;&gt;
+    &lt;!-- Panorama metadata --&gt;
+    &lt;div class=&quot;paver__meta&quot;&gt;
+        &lt;span class=&quot;paver__title&quot;&gt;Title&lt;/span&gt;
+        &lt;span class=&quot;paver__desc&quot;&gt;Description&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Panorama as background image --&gt;
+    &lt;div class=&quot;paver__pano&quot;&gt;&lt;/div&gt;
+
+    &lt;!-- Panorama scroller --&gt;
+    &lt;div class=&quot;paver__scroller&quot;&gt;
+        &lt;span&gt;&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+		</section>
+		<section>
+			<h2 id="usage">Usage</h2>
+			<h3 id="dependencies">Dependencies</h3>
+			<p>Paver requires <a href="http://jquery.com/" title="jQuery">jQuery v1.7 and above</a>, as well as Ben Alman's <a href="https://github.com/cowboy/jquery-throttle-debounce" title="jQuery Throttle/Debounce">jQuery Throttle/Debounce plugin</a>. For jQuery, you can use the one <a href="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">hosted by Google API</a>, or the <a href="https://code.jquery.com/">stable releases hosted by jQuery CDN</a>. For the throttle/debounce plugin, you can use the one <a href="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js">available via cdnjs</a>.</p>
+			<p>Remember, for Paver to work, you will have to load both the plugin's JS file (<code>paver.js</code> or <code>paver.min.js</code>, <em>after</em> the dependencies) and the accompanying stylesheet (<code>paver.css</code>).</p>
+			<h3 id="basic-usage">Basic usage</h3>
+			<p>For the HTML structure, refer to the <a href="#basic-markup" title="Basic markup for Paver">minimal basic markup</a>. To initialize Paver, simply chain the <code>.paver()</code> method to your selector of choice. With reference to the minimal basic markup, this would be:</p>
+			<pre class="language-javascript"><code>$(function () {
+    // Paver
+    $(&#39;div.panorama&#39;).paver();
+});</code></pre>
+			<p>As per standard jQuery plugins, <code>.paver()</code> will return the original object, allowing for further chaining if desired. For configuration options, please refer to <a href="usage-notes.html#configuration-options" title="Configuration options">configuration options</a>.</p>
+		</section>
+		<section>
+			<h2 id="demo">Demo</h2>
+			<p>A simple demo of how Paver works. You can resize the viewport to your liking, and Paver will automatically recalculate and recompute all necessary bits and pieces that make it work. The following panorama follows the suggested markup as specified above, but nested within a <code>&lt;figure&gt;</code> element to give context to the caption:</p>
+			<pre class="language-markup"><code>&lt;figure&gt;
+    &lt;div data-paver&gt;
+        &lt;img src=&quot;../images/p1.jpg&quot; title=&quot;Sunset in the heart of Aarhus&quot; alt=&quot;A panorama taken from the roof of my penthouse unit in the center of Aarhus.&quot; /&gt;
+    &lt;/div&gt;
+    &lt;figcaption&gt;Sunset in the heart of Aarhus&amp;mdash;A panorama taken from the roof of my penthouse unit in the center of Aarhus.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+			<pre class="language-javascript"><code>$(function () {
+    // Paver
+    $(&#39;div[data-paver]&#39;).paver();
+});</code></pre>
+			<figure>
+				<div data-paver><img src="../images/p1.jpg" title="The Aarhusian Sunset" alt="A panorama taken from the roof of my penthouse unit in the heart of Aarhus." /></div>
+				<figcaption>
+					<span class="title">The Aarhusian Sunset</span>
+					<span class="desc">A panorama taken from the roof of my penthouse unit in the heart of Aarhus.</span>
+				</figcaption>
+			</figure>
+			<h3 id="features">Features</h3>
+			<ul>
+				<li id="features__motion-detection">
+					<h4>Orientation-adjusted motion detection</h4>
+					<p>Paver uses <code>deviceorientation</code> to access the gyroscope data from a device, if available. It translates rotation along the x and z axis into panning action. More importantly, Paver intelligently sniffs out the screen orientation in order to perform motion translation properly.</p>
+				</li>
+				<li id="features__mouse-movements">
+					<h4>Mouse as a panning proxy</h4>
+					<p>Paver listens to jQuery's proprietary <code>mousemove</code> event, where the cursor position relative to the panorama container is recorded. Paver uses these coordinates to move the inner panorama image using CSS3 transforms.</p>
+				</li>
+				<li id="features__mobile-friendly">
+					<h4>Responsive &amp; mobile-friendly</h4>
+					<p>Paver reacts to viewport size changes, and is smart enough to determine when panning is no longer necessary in order to view the panorama in its entirety. It also intelligently checks on screen orientation on mobile devices, so it will work flawlessly regardless of your device orientation.</p>
+				</li>
+				<li id="features__graceful-degradation">
+					<h4>Graceful degradation</h4>
+					<p>No JS? No problem&mdash;<a href="#basic-styles" title="Rudimentary CSS needed for no-JS support.">with the basic styles in place</a>, your panorama can still be viewed in its all its beauty even when the end-user have JavaScript turned off in their browser. Paver also offers the option to <a href="usage-notes.html#config__failure-message" title="">display failure messages</a> when gyroscopic data is unavailable on mobile, touch-based devices.</p>
+				</li>
+			</ul>
+			<figure>
+				<div data-paver><img src="../images/p2.jpg" title="Godsbanen" alt="A Sunday morning walk to the rooftop of Godsbanen, Aarhus." /></div>
+				<figcaption>
+					<span class="title">Godsbanen</span>
+					<span class="desc">A Sunday morning walk to the rooftop of Godsbanen, Aarhus.</span>
+				</figcaption>
+			</figure>
+			<p>The panorama above has a smaller aspect ratio than normal: Paver only kicks in when the viewport is narrow enough&mdash;so, resized away and see what happens.</p>
+		</section>
+		
+		<section>
+			<h2 id="further-information">Further Information</h2>
+
+			<h3 id="usage-notes">Usage notes &amp; plugin configuration</h3>
+			<p>For detailed usage notes, please refer to the <a href="usage-notes.html" title="Usage Notes">Usage Notes</a> page. Plugin configuration options are also available in the page.</p>
+
+			<h3 id="advanced-usage">Advanced usage</h3>
+			<p>For examples of advanced usage, please refer to the <a href="advanced-usage.html" title="Advanced Usage">Advanced Usage</a> page.</p>
+
+			<h3 id="custom-triggers-events">Custom triggers &amp; events</h3>
+			<p>Paver supports custom triggers, which allows developers to force recomputation in the event of user-interaction that is not predicted, due to its non-exhaustiveness and limitless possibilities, by the plugin. In addition, Paver will also fire custom events to allow developers to track the initialization progress of the plugin. Please refer to <a href="custom-triggers-events.html" title="Custom Triggers &amp; Events">Custom Triggers &amp; Events</a> for more information.</p>
+			
+		</section>
+	</main>
+
+	<footer>
+		<a href="#" id="up" class="icon-font"></a>
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 516 560" xml:space="preserve">
+			<g>
+				<polygon class="fill" points="0,0 0,158 165,158 258,306 351,158 516,158 516,0"></polygon>
+				<polygon class="fill" points="165,366 258,507 351,366 351,560 165,560"></polygon>
+			</g>
+		</svg>
+		<p>Code, design &amp; photos by <a href="http://terrymun.com/" title="Terry Mun">Terry Mun</a> &middot; 2015</p>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+		<script type="text/javascript" src="../src/jquery.paver.min.js"></script>
+		<script type="text/javascript" src="./js/functions.js"></script>
+		<script type="text/javascript">
+			$(function () {
+				// Paver
+				$('div[data-paver]').paver();
+			});
+		</script>
+	</footer>
+</body>
+</html>

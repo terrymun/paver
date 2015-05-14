@@ -1,0 +1,208 @@
+/* Variables */
+$throttleDuration: 0.1s;
+$scrollerBackground: rgba(255,255,255,.33);
+$scrollerHandlerBackground: rgba(255,255,255,.75);
+$scrollerHeight: 4px;
+$scrollerLeftOffset: 32px;
+$scrollerRightOffset: 32px;
+$scrollerBottomOffset: 16px;
+$scrollerHandlerWidth: 12.5%;
+
+/* Panoview */
+* {
+	box-sizing: border-box;
+}
+
+/* Success initialization of Paver */
+.paver--initialized {
+	position: relative;
+}
+.paver--ready {
+	overflow: hidden;
+
+	.paver__meta {
+		background-color: rgba(0,0,0,.6);
+		color: #eee;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		opacity: 0;
+		padding: .5rem;
+		pointer-events: none;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 3;
+		transition: opacity .125s ease-in-out;
+		text-shadow: 1px 1px 5px rgba(0,0,0,.125);
+
+		span {
+			padding: 0 10%;
+			&.paver__title {
+				font-size: 2em;
+				font-weight: bold;
+				line-height: 1.5em;
+				margin-bottom: .25em;
+				&::after {
+					content: ' ';
+					display: block;
+					border-bottom: 1px solid #fff;
+					width: 33%;
+					margin: 0 auto;
+				}
+			}
+		}
+	}
+
+	&.paver--metaActive {
+		div[class^='paver__meta'] { opacity: 1; }
+		&:hover div[class^='paver__meta'] { opacity: 0; }
+	}
+
+	div.paver__pano {
+		background-size: cover;
+		position: relative;
+		z-index: 1;
+		/* transition-duration must match the panningThrottle values in JS config */
+		transition: all $throttleDuration linear;
+	}
+	div.paver__scroller {
+		background-color: $scrollerBackground;
+		border-radius: $scrollerHeight/2;
+		height: $scrollerHeight;
+		opacity: 0;
+		position: absolute;
+		bottom: $scrollerBottomOffset;
+		left: $scrollerLeftOffset;
+		right: $scrollerRightOffset;
+		z-index: 2;
+		/* transition-duration must match the panningThrottle values in JS config */
+		transition: all $throttleDuration ease-in-out;
+
+		span {
+			background-color: $scrollerHandlerBackground;
+			border-radius: $scrollerHeight/2;
+			display: block;
+			width: $scrollerHandlerWidth;
+			height: $scrollerHeight;
+			transition: all .125s linear;
+		}
+	}
+
+	&.paver--on:hover, &.paver--tilting {
+		div.paver__scroller {
+			opacity: 1;
+		}
+	}
+}
+
+/* Media queries */
+@media only screen and (max-width: 768px) {
+	.paver--ready {
+		&.paver--metaActive {
+			div.paver__meta {
+				opacity: 0;
+			}
+		}
+		/* Disable scroller appearing when "hovered" on in mobile devies */
+		&.paver--on:hover {
+			div.paver__scroller {
+				opacity: 0;
+			}
+		}
+	}
+}
+
+/* Other styles */
+.paver__meta1 {
+	background-color: rgba(0,0,0,.6);
+	color: #eee;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding: .5rem;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 3;
+	transition: opacity .125s ease-in-out;
+	text-shadow: 1px 1px 5px rgba(0,0,0,.125);
+
+	span {
+		padding: 0 10%;
+		&.paver__title {
+			font-size: 2em;
+			font-weight: bold;
+			line-height: 1.5em;
+			margin-bottom: .25em;
+			&::after {
+				content: ' ';
+				display: block;
+				border-bottom: 1px solid #fff;
+				width: 33%;
+				margin: 0 auto;
+			}
+		}
+	}
+}
+.paver__meta2 {
+	background-color: rgba(0,0,0,.6);
+	color: #eee;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	padding: .5rem;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 3;
+	transition: opacity .125s ease-in-out;
+	text-shadow: 1px 1px 5px rgba(0,0,0,.125);
+
+	span {
+		padding: 0 10%;
+		width: 100%;
+		&.paver__title {
+			font-size: 2em;
+			font-weight: bold;
+			line-height: 1.5em;
+			margin-bottom: .25em;
+		}
+	}
+}
+.paver__meta3 {
+	background-color: rgba(0,0,0,.6);
+	color: #eee;
+	padding: .5rem 16.667%;
+	position: absolute;
+	pointer-events: none;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 3;
+	transition: opacity .125s ease-in-out;
+	text-shadow: 1px 1px 5px rgba(0,0,0,.125);
+
+	span {
+		display: inline;
+		&.paver__title {
+			font-weight: bold;
+			&::after {
+				content: ':';
+				margin-right: .25em;
+			}
+		}
+		&.paver__desc {
+			font-style: italic;
+		}
+	}
+}

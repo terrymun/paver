@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Custom Triggers &amp; Events &middot; Paver, a jQuery plugin for easy panorama viewing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" media="all" rel="stylesheet" />
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700|PT+Serif:400italic" rel="stylesheet" type="text/css">
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" media="all" rel="stylesheet" />
+	<link rel="stylesheet" href="./css/style.css" />
+	<link rel="stylesheet" href="../css/paver.css" />
+
+	<link rel="author" href="https://plus.google.com/+TerryMun/"></link>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,"script","//www.google-analytics.com/analytics.js","ga");
+		ga("create", "UA-46830269-1", "terrymun.github.io");
+		ga("send", "pageview");
+	</script>
+
+</head>
+<body>
+	<header>
+		<div>
+			<h1><a href="index.html" title="Paver Home">Paver.</a></h1>
+			<span class="byline">Replicating the photo viewer/panner seen on the experimental Facebook Pages app</span>
+		</div>
+	</header>
+
+	<nav id="breadcrumb">
+		<ul>
+			<li><a href="index.html" title="Paver">Paver Home</a></li>
+			<li><a href="custom-triggers-events" title="Custom Events">Custom Triggers &amp; Events</a></li>
+		</ul>
+	</nav>
+
+	<main id="content">
+		<section>
+			<h2 id="custom-triggers">Custom triggers</h2>
+			<p>Paver exposes several public functions that developers can manipulate with in order to trigger desired behavior without interacting with the plugin. In order to maintain direct chainability with other jQuery methods, I have chosen not to implement public methods that can be called by chaining, i.e. <code>$(selector).paver().destroy()</code>. However, I have provisioned <em>three</em> distinct ways where you can access public functions in Paver. <code>args</code> represent accepted arguments for the respective public function(s):</p>
+			<ol>
+				<li>By accessing the <code>plugin_data</code> object of the Paver instances: <pre class="language-javascript"><code>$(selector).data('plugin_paver').customTrigger([args]);</code></pre></li>
+				<li>By passing the name of custom trigger as a string into the <code>.paver()</code> method: <pre class="language-javascript"><code>$(selector).paver('customTrigger'[, args]);</code></pre></li>
+				<li>By triggering a namespaced custom event at the Paver instance: <pre class="language-javascript"><code>$(selector).trigger('customTrigger.paver');</code></pre></li>
+			</ol>
+			<p>Note that all custom triggers will only be triggered after the Paver is successfully intialized and ready to use, i.e. when the <code><a href="#custom-events__ready-paver" title="ready.paver">ready.paver</a></code> event is fired. To avoid user confusion/frustration when accessing public functions in the event that Paver is not yet ready, I strongly recommend also binding events <em>after</em> <code><a href="#custom-events__ready-paver" title="ready.paver">ready.paver</a></code> has been fired, i.e.:</p>
+			<pre class="language-javascript"><code>// Initialize paver
+$(paverSelector).paver();
+
+// Allow user to destroy instance only after when ready
+$(paverSelector).on('ready.paver', funtion() {
+	$('button').prop('disable', false);
+});
+$('button').on('click', function() {
+	$(paverSelector).paver('destroy');
+	// or: $(this).data('plugin_paver').destroy();
+	// or: $(this).trigger('destroy.paver');
+});</code></pre>
+			<table id="custom-triggers__table">
+				<thead>
+					<tr>
+						<td>Function name</td>
+						<td>Arguments</td>
+						<td>Description</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="custom-triggers__destroy-paver">
+						<th>destroy</th>
+						<td>None</td>
+						<td><p>Destroys the Paver instance, and reinserts the original DOM node in its place. Will emit the <code><a href="#custom-events__destroyed-paver" title="destroyed.paver">destroyed</a></code> event when completed.</p></td>
+					</tr>
+					<tr id="custom-trigger__pan-paver">
+						<th>pan</th>
+						<td>Object<pre class="language-javascript"><code>{
+  xPos: number,
+  yPos: number
+}</code></pre></td>
+						<td><p>Pans the panorama in the Paver instance. Only a single argument is accepted, and it has to be in the form of an object. <code>xPos</code> refers to the position along the x-axis while <code>yPos</code> refers to the position along the y-axis (implemented, but not used&mdash;future support for vertical panoramas). The values of <code>xPos</code> and <code>yPos</code> will be coerced to fall in the range of 0&le;n&le;1, where <em>n</em> refers to the number passed to each parameter.</p><p>When no arguments are passed, triggering <code>pan</code> will pan the panorama to the <a href="usage-notes.html#config__start-position" title="startPosition">start position</a> defined in the plugin configuration.</p></td>
+					</tr>
+					<tr id="custom-triggers__recompute-paver">
+						<th>recompute</th>
+						<td>None</td>
+						<td><p>Triggers recomputing and binding of events to Paver instances that satisfy the selector. Will emit the <code><a href="#custom-events__recompute-start-paver" title="recomputeStart.paver">recomputeStart</a></code> event when initiated.</p></td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section>
+			<h2 id="custom-events">Custom events</h2>
+			<p>There are two kinds of custom events emitted: <a href="#custom-events-global" title="Custom events: Global">global custom events</a>, or <a href="#custom-events-scoped" title="Custom events: Scoped/Individual">scoped custom events</a> (triggered by each Paver instance). All events are namespaced, i.e. <code>eventName.paver</code>. The purpose behind creating custom events is to enable developers to (1) check if Paver has been enabled, (2) verify that gyroscopic data is available, (3) keep track of the progress of Paver initialization or the internal calculation events triggered.</p>
+	
+			<h3 id="custom-events-global">Global</h3>
+			<p>Global events are triggered on the <code>document</code> object, i.e:</p>
+			<pre class="language-javascript"><code>$(document).on('enabled.paver', function() {
+    // Paver is enabled!
+});</code></pre>
+			<table id="custom-events-global__table">
+				<thead>
+					<tr>
+						<td>Event Name</td>
+						<td>Conditional</td>
+						<td>Description</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="custom-events__has-gyroscope-data-paver">
+						<th>hasGyroscopeData</th>
+						<td><strong>Yes</strong>. See also: <code><a href="#custom-events__has-no-gyroscope-data-paver" title="hasNoGyroscopeData.paver">hasNoGyroscopeData</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__has-no-gyroscope-data-paver" title="hasNoGyroscopeData.paver">hasNoGyroscopeData</a></code> are mutually exclusive. Fired when Paver determines that gyroscopic data is available (alpha, beta and/or gamma is not <code>null</code>.</p><p>The following gyroscopic data is passed to the event handler as an object, when the JavaScript deferred object is resolved:</p>
+						<pre class="language-javascript"><code>{
+    orientation: {
+        alpha: &lt;deviceOrientationEvent.alpha&gt;,
+        beta: &lt;deviceOrientationEvent.beta&gt;,
+        gamma: &lt;deviceOrientationEvent.gamma&gt;
+    },
+    status: {
+        deviceOrientationEventSupport: &lt;boolean&gt;,
+        deviceOrientationData: &lt;boolean&gt;
+    }
+}</code></pre>
+						<p>The gyroscopic data object can be accessed using:</p>
+						<pre class="language-javascript"><code>$(document).on('hasGyroscopeData.paver', function(e, d) {
+    // Gyroscopic data available
+    console.log(d);
+});</code></pre></td>
+					</tr>
+					<tr id="custom-events__has-no-gyroscope-data-paver">
+						<th>hasNoGyroScopeData</th>
+						<td><strong>Yes</strong>. See also: <code><a href="#custom-events__has-gyroscope-data-paver" title="hasGyroscopeData.paver">hasGyroscopeData</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__has-gyroscope-data-paver" title="hasGyroscopeData.paver">hasGyroscopeData</a></code> are mutually exclusive. Fired when Paver determines that gyroscopic data is unavailable (alpha, beta and/or gamma is returns <code>null</code>), and/or when the device does not support the <code>deviceorientation</code> event. The following data is passed to the event handler as an object, when the JavaScript deferred object is rejected:</p>
+						<pre class="language-javascript"><code>{
+    status: {
+        deviceOrientationEventSupport: &lt;boolean&gt;,
+        deviceOrientationData: &lt;boolean&gt;
+    }
+}</code></pre></td>
+					</tr>
+					<tr id="custom-events__enabled-paver">
+						<th>enabled</th>
+						<td><strong>Yes</strong>. See also: <code><a href="#custom-events__disabled-paver" title="disabled.paver">disabled</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__disabled-paver" title="disabled.paver">disabled</a></code> are mutually exclusive. Fired when Paver is conditionally determined to initialize internally, only when the device satisfies the following criteria:</p><ul><li>does not have a working gyscorope (e.g. most desktops and laptops)&mdash;Paver will listen to <code>mousemove</code> events</li><li>has a gyroscope and is a touch-based device (e.g. some mobile devices and tablets)&mdash;Paver will listen to <code>mousemove</code> <em>and</em> <code>deviceorientation</code> events</li></ul></td>
+					</tr>
+					<tr id="custom-events__disabled-paver">
+						<th>disabled</th>
+						<td><strong>Yes</strong>. See also: <code><a href="#custom-events__enabled-paver" title="enabled.paver">enabled</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__enabled-paver" title="enabled.paver">enabled</a></code> are mutually exclusive. Fired when it is determined that Paver will not be of use:</p>
+						<ul><li>user is on a touch device that has no gyroscope (will fall back to original markup)</li></ul></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h3 id="custom-events-scoped">Scoped (Individual)</h3>
+			<p>Scoped (individual) events are triggered on the selector for each Paver instance, i.e:</p>
+			<pre class="language-javascript"><code>$('div.paver').on('init.paver', function() {
+    // Paver is initialized
+});</code></pre>
+			<p>Note that many scoped events are mutually-exclusive, such that only one in a pair will be triggered. They are labelled as "conditional" in the table below:</p>
+			<table id="custom-events-scoped__table">
+				<thead>
+					<tr>
+						<td>Event Name</td>
+						<td>Conditional</td>
+						<td>Description</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="custom-events__image-load-done-paver">
+						<th>imageLoadDone</th>
+						<td>Yes. See also <code><a href="#custom-events__image-load-fail-paver" title="imageLoadFail.paver">imageLoadFail</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__image-load-fail-paver" title="imageLoadFail.paver">imageLoadFail</a></code> are mutually exclusive. Fired when the panorama image has been successfully loaded. All computations performed by Paver are only rigged to fire <em>after</em> the panorama image is loaded, so that its natural dimensions are accessible to Paver. This allows Paver to be initialized&mdash; see <code><a href="#custom-events__init-paver" title="init.paver">init</a></code></p></td>
+					</tr>
+					<tr id="custom-events__image-load-fail-paver">
+						<th>imageLoadFail</th>
+						<td>Yes. See also <code><a href="#custom-events__image-load-done-paver" title="imageLoadDone.paver">imageLoadDone</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__image-load-done-paver" title="imageLoadDone.paver">imageLoadDone</a></code> are mutually exclusive. Fired when panorama image has failed to load, and Paver will not be initialized.</p></td>
+					</tr>
+					<tr id="custom-events__init-paver">
+						<th>init</th>
+						<td>No</td>
+						<td><p>Fired when Paver is initialized, i.e. when DOM replacements are performed. This happens after:</p><ul><li>the class <code>.paver--initialized</code> has been added to the selector, and</li><li>the <code>title</code> and <code>alt</code> attributes from the image has been read, and inserted into <code>.paver__meta</code> if the option <code>meta</code> or <code>data-meta</code> is set to true.</li></ul></td>
+					</tr>
+					<tr id="custom-events__ready-paver">
+						<th>ready</th>
+						<td>No</td>
+						<td><p>Fired when original panorama image is hidden and DOM replacements have been performed. At this point the plugin will proceed to <a href="#custom-events__compute-end-paver" title="computeEnd.paver">compute dimensions</a> and conditionally <a href="#custom-events__events-bound-paver" title=".paver">bind</a>/<a href="#custom-events__events-unbound-paver" title=".paver">unbind</a> events.</p></td>
+					</tr>
+					<tr id="custom-events__compute-end-paver">
+						<th>computeEnd</th>
+						<td>No</td>
+						<td><p>Fired when panorama dimensions have been computed, and the dimensions of the dummy panorama wrapper have been set.</p></td>
+					</tr>
+					<tr id="custom-events__events-bound-paver">
+						<th>eventsBound</th>
+						<td>Yes. See also: <code><a href="#custom-events__events-unbound-paver" title="eventsUnbound.paver">eventsUnbound</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__events-unbound-paver" title="eventsUnbound.paver">eventsUnbound</a></code> are mutually exclusive. Binding of events relies whether the panorama is really overflowing from its parent container (hence the need for Paver).</p></td>
+					</tr>
+					<tr id="custom-events__events-unbound-paver">
+						<th>eventsUnbound</th>
+						<td>Yes. See also: <code><a href="#custom-events__events-bound-paver" title="eventsBound.paver">eventsBound</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__events-bound-paver" title="eventsBound.paver">eventsBound</a></code> are mutually exclusive. Events will be unbound when the panorama is not wide enough to overflow its parent container (hence no need for Paver).</p></td>
+					</tr>
+					<tr id="custom-events__initial-pan-start-paver">
+						<th>initialPanStart</th>
+						<td>Yes. See also: <code><a href="#custom-events__pan-start-paver" title-"panStart.paver">panStart</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__pan-start-paver" title-"panStart.paver">panStart</a></code> are mutually exclusive. Fired whenPaver is <strong>first initialized</strong>, which will pan the panorama to a default position (center) or a user-determined position along the x-axis.</p></td>
+					</tr>
+					<tr id="custom-events__pan-start-paver">
+						<th>panStart</th>
+						<td>Yes. See also: <code><a href="#custom-events__initial-pan-start-paver" title-"initialPanStart.paver">initialPanStart</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__initial-pan-start-paver" title-"initialPanStart.paver">initialPanStart</a></code> are mutually exclusive&mdash;it is <em>not</em> fired for the first panning event. Fired when the panning of the panorama is initiated. Panning can occur under several conditions:</p>
+						<ul>
+							<li>when <code>mousemove</code> is triggered, which will pan the panorama according to the cursor's relative position in the panorama container,</li>
+							<li>when <code>deviceorientation</code> change is triggered, which will pan the panorama according to interpreted tilt along the beta and/or gamma value from the device gyroscope.</li>
+						</ul></td>
+					</tr>
+					<tr id="custom-events__initial-pan-end-paver">
+						<th>initialPanEnd</th>
+						<td>Yes. See also: <code><a href="#custom-events__pan-end-paver" title-"panEnd.paver">panEnd</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__pan-end-paver" title-"panEnd.paver">panEnd</a></code> are mutually exclusive. Fired when Paver is <strong>first initialized</strong>, which will pan the panorama to a default position (center) or a user-determined position along the x-axis. Listens to the <code>transitionend</code> event (with <a href+"https://github.com/ry5n/which-transition-end/blob/master/index.js">prefixed support for various browsers</a>).</p></td>
+					</tr>
+					<tr id="custom-events__pan-end-paver">
+						<th>panEnd</th>
+						<td>Yes. See also: <code><a href="#custom-events__initial-pan-end-paver" title-"initialPanEnd.paver">initialPanEnd</a></code></td>
+						<td><p>This event and <code><a href="#custom-events__initial-pan-end-paver" title-"initialPanEnd.paver">initialPanEnd</a></code> are mutually exclusive&mdash; it is <em>not</em> fired after the completion of the first panning event. Fired when the panning of the panorama is complete, listens to the <code>transitionend</code> event (with <a href+"https://github.com/ry5n/which-transition-end/blob/master/index.js">prefixed support for various browsers</a>).</p></td>
+					</tr>
+					<tr id="custom-events__recompute-start-paver">
+						<th>recomputeStart</th>
+						<td>No</td>
+						<td><p>Fired when a window resize event is detected, or a <code><a href="#custom-triggers__recompute-paver" title="recompute.paver">recompute.paver</a></code> custom trigger is fired. This will force Paver to <a href="#custom-events__compute-end-paver" title="computeEnd.paver">recompute the dimensions of the panorama</a> and also re-evaluate of events should be <a href="#custom-events__events-bound-paver" title="eventsBound.paver">bound</a> or <a href="#custom-events__events-unbound-paver" title="eventsUnbound.paver">unbound</a>.</p></td>
+					</tr>
+					<tr id="custom-events__destroyed-paver">
+						<th>destroyed</th>
+						<td>No</td>
+						<td><p>Fired when the Paver instance has been destroyed&mdash;this occurs after the reinsertion of the original DOM node, removal of all event handlers, resetting of Paver-related classes and resetting of the initialization status of the Paver instance of element(s) of interest.</p></td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</main>
+
+	<footer>
+		<a href="#" id="up" class="icon-font"></a>
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 516 560" xml:space="preserve">
+			<g>
+				<polygon class="fill" points="0,0 0,158 165,158 258,306 351,158 516,158 516,0"></polygon>
+				<polygon class="fill" points="165,366 258,507 351,366 351,560 165,560"></polygon>
+			</g>
+		</svg>
+		<p>Code, design &amp; photos by <a href="http://terrymun.com/" title="Terry Mun">Terry Mun</a> &middot; 2015</p>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+		<script type="text/javascript" src="./js/functions.js"></script>
+	</footer>
+</body>
+</html>

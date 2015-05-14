@@ -1,0 +1,53 @@
+{
+  "name": "paver",
+  "filename": "jquery.paver.min.js",
+  "version": "1.0.0",
+  "description": "A minimal panorama/image viewer replicating the effect seen in Facebook Pages app.",
+  "homepage": "https://github.com/terrymun/paver",
+  "main": "jquery.paver.js",
+  "authors": [
+    {
+      "name": "Terry Mun",
+      "email": "hello@terrymun.com",
+      "homagepage": "http://terrymun.com"
+    }
+  ],
+  "maintainers": [
+    "Terry Mun <hello@terrymun.com>"
+  ],
+  "repositories": {
+    "type": "git",
+    "url": "https://github.com/terrymun/paver/"
+  },
+  "keywords": [
+    "paver",
+    "panorama"
+    "photo"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "package.json"
+  ],
+  "dependencies": {
+    "jquery": ">=1.9"
+  },
+  "npmName": "paver",
+  "npmFileMap": [
+    {
+      "basePath": "/dist/",
+      "files": [
+        "./jquery.paver.js",
+        "./jquery.paver.min.js",
+        "./css/fluidbox.css"
+      ]
+    }
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "author": "Terry Mun <hello@terrymun.com> (http://terrymun.com)"
+}

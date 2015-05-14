@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Usage Notes &middot; Paver, a jQuery plugin for easy panorama viewing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" media="all" rel="stylesheet" />
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700|PT+Serif:400italic" rel="stylesheet" type="text/css">
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" media="all" rel="stylesheet" />
+	<link rel="stylesheet" href="./css/style.css" />
+	<link rel="stylesheet" href="../css/paver.css" />
+
+	<link rel="author" href="https://plus.google.com/+TerryMun/"></link>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,"script","//www.google-analytics.com/analytics.js","ga");
+		ga("create", "UA-46830269-1", "terrymun.github.io");
+		ga("send", "pageview");
+	</script>
+
+</head>
+<body>
+	<header>
+		<div>
+			<h1><a href="index.html" title="Paver Home">Paver.</a></h1>
+			<span class="byline">Replicating the photo viewer/panner seen on the experimental Facebook Pages app</span>
+		</div>
+	</header>
+
+	<nav id="breadcrumb">
+		<ul>
+			<li><a href="index.html" title="Paver">Paver Home</a></li>
+			<li><a href="custom-events" title="Custom Events">Usage Notes</a></li>
+		</ul>
+	</nav>
+
+	<main id="content">
+		<section>
+			<h2 id="configuration-options">Configuration options</h2>
+			<p>The following table is an alphabetical list of all accepted options for configuring your Paver instance. These options can either be declared in an object that is passed into the <code>.paver()</code> method, or as a HTML5 <code>data-</code> attribute.</p>
+			<table id="configuration-options__table">
+				<thead>
+					<tr>
+						<td>Option</td>
+						<td>HTML5 data</td>
+						<td>Type</td>
+						<td>Default</td>
+						<td>Description</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="config__failure-message">
+						<th>failureMessage</th>
+						<td>data-failure-message</td>
+						<td>Text</td>
+						<td>Scroll left/right to pan through panorama.</td>
+						<td><p>The failure message to display when Paver is not initialized, such that users are not left in the dark in how to navigate/pan through the panorama. This message will appear in mobile devices with no gyroscopic data or no <code>DeviceOrientationEvent</code> support.</p><p class="user-message note">Will only work when <code><a href="#config__graceful-failure" title="gracefulFailure">gracefulFailure</a></code> is set to <code>true</code>.</p></td>
+					</tr>
+					<tr id="config__failure-message-insert">
+						<th>failureMessageInsert</th>
+						<td>data-failure-message-insert</td>
+						<td>Text</td>
+						<td>after</td>
+						<td><p>The DOM location where the failure message will be inserted. This follows the jQuery convention of inserting new DOM nodes&mdash;accepted values are <code>before</code>, <code>after</code>, <code>append</code> and <code>prepend</code>. If the value of this option is not one of the four specified, it will fallback to the default value of <em>after</em>.</p><p class="user-message note">Will only work when <code><a href="#config__graceful-failure" title="gracefulFailure">gracefulFailure</a></code> is set to <code>true</code>.</p></td>
+					</tr>
+					<tr id="config__graceful-failure">
+						<th>gracefulFailure</th>
+						<td>data-graceful-failure</td>
+						<td>Boolean</td>
+						<td>true</td>
+						<td>Allows the display of failure message (via <code><a href="#config__failure-message" title="failureMessage">failureMessage</a></code>) at the desired DOM insertion location (via <code><a href="#config__failure-message-insert" title="failureMessageInsert">failureMessageInsert</a></code>).</td>
+					</tr>
+					<tr id="config__grain">
+						<th>grain</th>
+						<td>data-grain</td>
+						<td>Numeric (integer)</td>
+						<td>3</td>
+						<td>Determines to how many decimal places, via <code>.toFixed()</code>, the relative position of the cursor to the parent container of the panorama, or the ratio of device tilt, should be computed to. Higher values may lead to over-sensitivity, lower values may lead to jitter effect. The minimum value is 1, and will be coerced by the plugin if the user-supplied value is less than or equals to 0.</td>
+					</tr>
+					<tr id="config__meta">
+						<th>meta</th>
+						<td>data-meta</td>
+						<td>Boolean</td>
+						<td>false</td>
+						<td>Determines whether a metadata overlay should be displayed. When enabled, the plugin will retrieve the value(s) of the <code>title</code> and/or <code>alt</code>, if declared (but by the way, the <code>alt</code> is <em>always required</em>), and injects them into the Paver container:<pre><code>&lt;div class=&quot;paver__meta&quot;&gt;
+    &lt;span class=&quot;paver__title&quot;&gt;Title&lt;/span&gt;
+    &lt;span class=&quot;paver__desc&quot;&gt;Description&lt;/span&gt;
+&lt;/div&gt;</code></pre></td>
+					</tr>
+					<tr id="config__minimum-overflow">
+						<th>minimumOverflow</th>
+						<td>data-minimum-overflow</td>
+						<td>Numeric (integer)</td>
+						<td>200</td>
+						<td><p>The excess width the panorama must have, in pixels, before Paver kicks in. In other words, this option allows the panorama's computed width to exceed that of its parent container by <code>n</code> amount of pixels before we allow for panning. Nobody wants a panorama that can barely be panned, which could almost fit in the whole screen, right?</p><p>This value should be determined on a case-by-case basis, depending on how wide your panorama container is, but with repeated testing I find <code>200</code> to be a good in-between value.</p></td>
+					</tr>
+					<tr id="config__mousemove-throttle">
+						<th>mousemoveThrottle</th>
+						<td>data-mousemove-throttle</td>
+						<td>Numeric (ms)</td>
+						<td>100</td>
+						<td><p>Governs how often the jQuery <code>mousemove</code> event should be fired. After testing I find that this value is optimal for smooth panning, yet still retains the resolution necessary for a smooth panning animation. This value should match, or be marginally more, the <code>transition-duration</code> property of the <code>.paver__pano</code> element, declared in <code>paver.css</code>.</p></td>
+					</tr>
+					<tr id="config__panning-throttle">
+						<th>panningThrottle</th>
+						<td>data-panning-throttle</td>
+						<td>Numeric (ms)</td>
+						<td>125</td>
+						<td><p>This throttles to the listening of the <code>deviceorientation</code> and/or <code>mousemove</code> events, to prevert jittery panning actions of Paver-enabled panoramas. This is partially due to the high sampling rate of gyroscoping data. However, increasing this number (longer durations) will lead to jerky panning movements due to low resolution of device tilt available to Paver.</p>
+						<p class="user-message note">When updating this value, remember to update the <code>transition-duration</code> property in <code>paver.scss</code> (and recompile it) or <code>paver.css</code>, such that it is equivalent to the <code>panningThrottle</code> value.</p></td>
+					</tr>
+					<tr id="config__resize-throttle">
+						<th>resizeThrottle</th>
+						<td>data-resize-throttle</td>
+						<td>Numeric (ms)</td>
+						<td>500</td>
+						<td><p>Governs how often the window <code>resize</code> event should be fired. Due to intensive computation requirements of each Paver instance, the window resize event has been highly throttled. Afterall, it is the <em>final</em> dimensions of the viewport that matters, not that of during transitional resizing events.</p></td>
+					</tr>
+					<tr id="config__responsive">
+						<th>responsive</th>
+						<td>data-responsive</td>
+						<td>Boolean</td>
+						<td>true</td>
+						<td>Toggles the responsiveness of the panorama image, in the event that the viewport is too wide such that panning is not required. If enable, Paver will attempt to resize the image to fill the dimensions of the image's parent.</td>
+					</tr>
+					<tr id="config__start-position">
+						<th>startPosition</th>
+						<td>data-start-position</td>
+						<td>Numeric (ratio)</td>
+						<td>0.5</td>
+						<td><p>Determines the start position of the panorama when Paver is enabled. By default, this will horizontally center the panorama. The ratio extends from 0 through 1, from the left to the right of the panorama. For example, if you want the panorama to be at the leftmost position upon initialization, use <code>0</code>.</p><p>Since this value must be a ratio, Paver will coerce the value to fall within this range, i.e. numeric values that fall beyond the range will be forced to 0 or 1.</p>
+						<p class="user-message note">This option will be nullified when gyroscopic data is in use.</p></td>
+					</tr>
+					<tr id="config__tilt">
+						<th>tilt</th>
+						<td>data-tilt</td>
+						<td>Boolean</td>
+						<td>true</td>
+						<td><p class="user-message reminder"><strong>Experimental feature that depends on device support.</strong></p><p>When enabled, this option allows Paver to tap to the gyroscopic data available from the device. It translates tilting (front-back and left-right) into panning actions.</p></td>
+					</tr>
+					<tr id="config__tilt-sensitivity">
+						<th>tiltSensitivity</th>
+						<td>data-tilt-sensitivity</td>
+						<td>Numeric (degrees)</td>
+						<td>0.2</td>
+						<td><p class="user-message reminder"><strong>Experimental feature that depends on device support.</strong></p><p>The number of degrees that has to be tilted in between measurements for the scroller to be display on a gyroscope-equipped device. The larger the value, the more rapid tilting action has to be initiated before the scoller appears on a gyroscope-equipped device.</p></td>
+					</tr>
+					<tr id="config__tilt-scroller-persistence">
+						<th>tiltScrollerPersistence</th>
+						<td>data-tilt-scroller-persistence</td>
+						<td>Numeric (ms)</td>
+						<td>500</td>
+						<td><p class="user-message reminder"><strong>Experimental feature that depends on device support.</strong></p><p>Determines the duration, in milliseconds, of which the scroller overlay will appear when the device is being tilted beyond the tiltThreshold (which is device orientation-sensitive). This rule is enforced using the <code>window.setTimeout()</code> function.</p><p class="user-message note">When this value is set to <code>0</code>, the scroller will <em>always</em> appear over the panorama on devices that provide gyroscopic data.</p></td>
+					</tr>
+					<tr id="config__tilt-threshold-landscape">
+						<th>tiltThresholdLandscape</th>
+						<td>data-tilt-threshold-landscape</td>
+						<td>Numeric (degrees)</td>
+						<td>24</td>
+						<td><p class="user-message reminder"><strong>Experimental feature that depends on device support.</strong></p><p>The number of degrees from the resting start position where the panning will end, when the device orientation is in landscape mode. For example, with the default value of <code>24</code>, the user simply has to tilt left/right by 24 degrees to reach the left/rightmost edges of the panorama in landscape mode.</p><p>This value will be coerced within the range of 0 to 180 degrees.</p></td>
+					</tr>
+					<tr id="config__tilt-threshold-portrait">
+						<th>tiltThresholdPortrait</th>
+						<td>data-tilt-threshold-portrait</td>
+						<td>Numeric (degrees)</td>
+						<td>12</td>
+						<td><p class="user-message reminder"><strong>Experimental feature that depends on device support.</strong></p><p>The number of degrees from the resting start position where the panning will end, when the device orientation is in portrait mode. For example, with the default value of <code>12</code>, the user simply has to tilt left/right by 12 degrees to reach the left/rightmost edges of the panorama in portrait mode.</p><p>This value will be coerced within the range of 0 to 180 degrees.</p></td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</main>
+
+	<footer>
+		<a href="#" id="up" class="icon-font"></a>
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 516 560" xml:space="preserve">
+			<g>
+				<polygon class="fill" points="0,0 0,158 165,158 258,306 351,158 516,158 516,0"></polygon>
+				<polygon class="fill" points="165,366 258,507 351,366 351,560 165,560"></polygon>
+			</g>
+		</svg>
+		<p>Code, design &amp; photos by <a href="http://terrymun.com/" title="Terry Mun">Terry Mun</a> &middot; 2015</p>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+		<script type="text/javascript" src="./js/functions.js"></script>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Advaned Usage &middot; Paver, a jQuery plugin for easy panorama viewing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" media="all" rel="stylesheet" />
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700|PT+Serif:400italic" rel="stylesheet" type="text/css">
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" media="all" rel="stylesheet" />
+	<link rel="stylesheet" href="./css/style.css" />
+	<link rel="stylesheet" href="../css/paver.css" />
+
+	<link rel="author" href="https://plus.google.com/+TerryMun/"></link>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,"script","//www.google-analytics.com/analytics.js","ga");
+		ga("create", "UA-46830269-1", "terrymun.github.io");
+		ga("send", "pageview");
+	</script>
+
+</head>
+<body>
+	<header>
+		<div>
+			<h1><a href="index.html" title="Paver Home">Paver.</a></h1>
+			<span class="byline">Replicating the photo viewer/panner seen on the experimental Facebook Pages app</span>
+		</div>
+	</header>
+
+	<nav id="breadcrumb">
+		<ul>
+			<li><a href="index.html" title="Paver">Paver Home</a></li>
+			<li><a href="advanced-usage.html" title="Advanced Usage">Advanced Usage</a></li>
+		</ul>
+	</nav>
+
+	<main id="content">
+		<section>
+			<h2 id="advanced-usage">Advanced Usage</h2>
+			<p>The following examples are slightly extended implementations of Paver. They rely on <a href="usage-notes.html#configuration-options" title="Paver configuration options">configuration options</a>.</p>
+
+			<h3 id="enabling-meta">Enabling meta</h3>
+			<p>Title and description of the panorama can be stored in the <code>title</code> and <code>alt</code> attributes respectively. When you enable meta, by using <code>meta: true</code> or <code>data-meta="true"</code>, Paver will inject and overlay metadata over the panorama. The metadata will fade away, by default, when the user interacts with the panorama. However, this effect/interaction can be further customized by the user using CSS.</p>
+			<figure>
+				<div data-paver data-meta="true"><img src="../images/p4.jpg" title="Of foggy mornings" alt="We crawled out of our beds in the wee hours of the morning, braved the narrow, muddy roads leading into the depths of the tea plantation." /></div>
+			</figure>
+			<ul id="meta-styles">
+				<li><a href="#" class="active"><div class="paver__meta1" data-meta-class="paver__meta1"><span class="paver__title">Title</span><span class="paver__desc">Description</span></div></a></li>
+				<li><a href="#"><div class="paver__meta2" data-meta-class="paver__meta2"><span class="paver__title">Title</span><span class="paver__desc">Description</span></div></a></li>
+				<li><a href="#"><div class="paver__meta3" data-meta-class="paver__meta3"><span class="paver__title">Title</span><span class="paver__desc">Description</span></div></a></li>
+			</ul>
+			<p>The possibilities of styling the meta overlay is next to infinite. However, here are three presets that you can play around with&mdash; and they are included in the plugin.</p>
+
+			<h3 id="something-other-than-a-central-position">Something other than a central position</h3>
+			<p>The panorama below uses the <code><a href="usage-notes.html#config__start-position">data-start-position</a>="0.25"</code> attribute to override the default setting, and the center point is placed one quarter from the left of the image:</p>
+			<figure>
+				<div data-paver data-start-position="0.25"><img src="../images/p3.jpg" title="At Brabrand S&oslash;" alt="Taking a break from a 38km bicycle ride by the scenic lake in the neighbourhood of Brabrand, Aarhus, Denmark." /></div>
+				<figcaption>
+					<span class="title">At Brabrand S&oslash;</span>
+					<span class="desc">Taking a break from a 38km bicycle ride by the scenic lake in the neighbourhood of Brabrand, Aarhus, Denmark.</span>
+				</figcaption>
+			</figure>
+
+			<h3 id="destroying-paver">Destroying a Paver instance</h3>
+			<p>Sometimes you might want to destroy a Paver instance when you see fit. This is possible by:</p>
+			<ul>
+				<li>Triggering the <code>destroy.paver</code> event using jQuery's <code><a href="https://api.jquery.com/trigger/">.trigger()</a></code> method, i.e. <pre class="language-javascript"><code>$(selector).trigger('destroy.paver');</code></pre></li>
+				<li>Chaining the <code>.destroy()</code> method to the <code>.data('plugin_paver')</code> returned from the <code>.paver()</code> method, i.e.: <pre class="language-javascript"><code>// Enable Paver
+var p = $(selector).paver();
+
+// Destroy Paver
+p.data('plugin_paver').destroy();</code></pre><p>The choice to sacrifice direct chainability (i.e. <code>.paver().destroy()</code> is to preserve the ability to chain further methods.</p></li>
+			</ul>
+			<figure>
+				<div data-paver id="to-toggle"><img src="../images/p6.jpg" title="Spring Yoga at Risskov Forest" alt="As the sunny days of summer approaches, I attended the first outdoor yoga session at the local park. We had a blast!" /></div>
+				<figcaption>
+					<span class="title">Spring Yoga at Risskov Forest</span>
+					<span class="desc">As the sunny days of summer approaches, I attended the first outdoor yoga session at the local park. We had a blast!</span>
+				</figcaption>
+			</figure>
+			<form>
+				<input type="checkbox" id="paver-toggle" disabled />
+				<label for="paver-toggle">Paver Status</label>
+			</form>
+			<p>The Paver instance above was initialized using the following code:</p>
+			<pre class="language-markup"><code>&lt;div data-paver id=&quot;to-destroy&quot;&gt;
+    &lt;img src=&quot;../images/p6.jpg&quot;
+         title=&quot;Spring Yoga at Risskov Forest&quot;
+         alt=&quot;As the sunny days of summer approaches, I attended the first outdoor yoga session at the local park. We had a blast!&quot; /&gt;
+&lt;/div&gt;</code></pre>
+			<p>There are several ways you can call a public function in Paver. Here, we want to call <code>this.destroy()</code>. By taking consideration that web developers have different preferences on how to access public functions, I have created three different ways in Paver to call them:</p>
+			<pre class="language-javascript"><code>// Option 1
+// Access the plugin_paver data object
+$(selector).data('plugin_paver').destroy();
+
+// Option 2
+// Pass the name of the public function through the .paver() method
+$(selector).paver('destroy');
+
+// Option 3
+// Trigger the custom namespaced event, destroy.paver
+$(selector).trigger('destroy.paver');</code></pre>
+			<p class="user-message note">I strongly recommend calling public events on Paver instances <em>after</em> it is ready, i.e. after the <code>ready.paver</code> event is fired. You can do this by listening to the custom namespaced events, and disabling user interactions (if any) until Paver is ready. With the example above, I am using a checkbox to toggle initialization and destruction of Paver:</p>
+			<pre class="language-markup"><code>&lt;div data-paver id=&quot;to-toggle&quot;&gt;
+    &lt;img src=&quot;../images/p6.jpg&quot; title=&quot;...&quot; alt=&quot;...&quot; /&gt;
+&lt;/div&gt;
+&lt;form&gt;
+    &lt;input type=&quot;checkbox&quot; id=&quot;paver-toggle&quot; disabled /&gt;
+    &lt;label for=&quot;paver-toggle&quot;&gt;Paver Status&lt;/label&gt;
+&lt;/form&gt;</code></pre>
+			<pre class="language-javascript"><code>$('#to-toggle').on('ready.paver', function(e) {
+	// Change state
+	$('#paver-toggle').prop({
+		checked: true,
+		disabled: false
+	});
+}).on('destroyed.paver', function(e) {
+	// Change state
+	$('#paver-toggle').prop({
+		checked: false
+	});
+});
+
+$('#paver-toggle').change(function() {
+	if(!$(this).prop('checked')) {
+		// Unchecked: destroy paver
+		$('#to-toggle').paver('destroy');
+	} else {
+		// Checked: reinitialize paver
+		$('#to-toggle').paver()
+	}
+});</code></pre>
+		</section>
+	</main>
+
+	<footer>
+		<a href="#" id="up" class="icon-font"></a>
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 516 560" xml:space="preserve">
+			<g>
+				<polygon class="fill" points="0,0 0,158 165,158 258,306 351,158 516,158 516,0"></polygon>
+				<polygon class="fill" points="165,366 258,507 351,366 351,560 165,560"></polygon>
+			</g>
+		</svg>
+		<p>Code, design &amp; photos by <a href="http://terrymun.com/" title="Terry Mun">Terry Mun</a> &middot; 2015</p>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+		<script type="text/javascript" src="../src/jquery.paver.min.js"></script>
+		<script type="text/javascript" src="./js/functions.js"></script>
+		<script type="text/javascript">
+			$(function () {
+				// Paver
+				var p = $('div[data-paver]').paver();
+
+				$('#to-toggle').on('ready.paver', function(e) {
+					// Change state
+					$('#paver-toggle').prop({
+						checked: true,
+						disabled: false
+					});
+				}).on('destroyed.paver', function(e) {
+					// Change state
+					$('#paver-toggle').prop({
+						checked: false
+					});
+				});
+
+				$('#paver-toggle').change(function() {
+					if(!$(this).prop('checked')) {
+						// Unchecked: destroy paver
+						$('#to-toggle').paver('destroy');
+					} else {
+						// Checked: reinitialize paver
+						$('#to-toggle').paver()
+					}
+				});
+
+			});
+		</script>
+	</footer>
+</body>
+</html>
