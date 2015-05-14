@@ -67,8 +67,6 @@ To install Paver, you will have to include the following resources in your page.
 
 In order to support CSS animation and transformation applied by `paver.css` in browsers that require vendor prefixes, you should consider using [prefixfree.js](http://leaverou.github.com/prefixfree/) as a dependency.
 
-----
-
 ## Usage
 ### Dependencies
 Paver requires [jQuery v1.7 and above](http://jquery.com/), as well as Ben Alman's [jQuery Throttle/Debounce plugin](https://github.com/cowboy/jquery-throttle-debounce). For jQuery, you can use the one [hosted by Google API](http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js), or the [stable releases hosted by jQuery CDN](https://code.jquery.com/). For the throttle/debounce plugin, you can use the one [available via cdnjs](http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js).
@@ -92,7 +90,15 @@ $(function() {
 
 As per standard jQuery plugins, `.paver()` will return the original object, allowing for further chaining if desired. For configuration options, please refer to [configuration options](http://terrymun.github.io/paver/demo/usage-notes.html#configuration-options).
 
-----
+### Precautions
+#### Performance on mobile devies with gyroscopic data
+As it is computationally expensive to listen to the `deviceorientation` event, I do not suggest having too many Paver instances on a single page for a mobile device for performance reason.
+
+#### Fallback on non-gyroscopic mobile devices
+On touch-based mobile devices that do not provide gyroscopic data, or do not support the `deviceorientation` event, will have Paver disabled by default. This behavior is intentional.
+
+#### Public functions/methods for Paver
+In order to ensure that [these methods](http://terrymun.github.io/paver/demo/custom-triggers-events.html) are called only when Paver is completely ready, they are wrapped within the `onload` event of the panorama image. Therefore, you are strongly suggested to prevent user interaction that will call for these methods, up until the `ready.paver` event has been fired.
 
 ## Resources and documentation
 ### Usage notes &amp; plugin configuration
@@ -135,13 +141,13 @@ defaults = {
 For examples of advanced usage, please refer to the [Advanced Usage](http://terrymun.github.io/paver/demo/advanced-usage.html) page.
 
 ### Custom triggers
-Paver supports custom triggers, which allows developers to force recomputation in the event of user-interaction that is not predicted, due to its non-exhaustiveness and limitless possibilities, by the plugin. In addition, Paver will also fire custom events to allow developers to track the initialization progress of the plugin. Please refer to [Custom Triggers & Events](http://terrymun.github.io/paver/demo/custom-triggers-events.html) for more information.
+Paver supports custom triggers, which allows developers to force recomputation of the panorama wrapper dimensions in the event of user-interaction. In addition, Paver will also fire custom events to allow developers to track the initialization progress of the plugin. Please refer to [Custom Triggers & Events](http://terrymun.github.io/paver/demo/custom-triggers-events.html) for more information.
 
 ----
 
 ## Frequently Asked Questions
 1.  **Paver is not working in my installation. Where should I start?**  
-Start by checking your browser's console log. What error messages do you see? Also, make sure that you are using the *latest* version of jQuery 1.x (minimum requirement: v1.8 or above) and that the dependencies have been loaded successfully. Also, did you remember reading the [usage precautions](#precautions)? You might have encountered a scenario where Paver is not designed to handle.
+Start by checking your browser's console log. What error messages do you see? Also, make sure that you are using the *latest* version of jQuery 1.x (minimum requirement: v1.7 or above) and that the dependencies have been loaded successfully. Also, did you remember reading the [usage precautions](#precautions)? You might have encountered a scenario where Paver is not designed to handle.
 
 2. **The image url isn't being interpretted correctly.**  
 Paver fetches the original panorama based on the URL specified in the `src` attribute of the **first occuring** image element (`<img />`). Spacebar characters in image URLs must be escaped properly, as per the [RFC 2396 standard](http://tools.ietf.org/html/rfc2396).
