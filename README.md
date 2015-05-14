@@ -7,7 +7,7 @@ Paver had been tested in the latest versions of Chrome, Firefox, Safari and iOS 
 
 Special thanks to:
 
-- 
+- [jQuery Plugin Boilerplate](https://github.com/jquery-boilerplate/jquery-boilerplate), which made authoring Paver a lot easier
 
 ## Introduction
 
