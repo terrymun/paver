@@ -51,12 +51,12 @@ Paver listens to jQuery's proprietary `mousemove` event, where the cursor positi
 Paver reacts to viewport size changes, and is smart enough to determine when panning is no longer necessary in order to view the panorama in its entirety. It also intelligently checks on screen orientation on mobile devices, so it will work flawlessly regardless of your device orientation.
 
 ### Graceful degradation
-No JS? No problem—with the basic styles in place, your panorama can still be viewed in its all its beauty even when the end-user have JavaScript turned off in their browser. Paver also offers the option to [display failure messages](usage-notes.html#config__failure-message) when gyroscopic data is unavailable on mobile, touch-based devices.
+No JS? No problem—with the basic styles in place, your panorama can still be viewed in its all its beauty even when the end-user have JavaScript turned off in their browser. Paver also offers the option to [display failure messages](http://terrymun.github.io/paver/demo/usage-notes.html#config__failure-message) when gyroscopic data is unavailable on mobile, touch-based devices.
 
 ----
 
 ## Installation
-To install Fluidbox, you will have to include the following resources in your page. The JS files should be loaded in the order stipulated below. For the CSS file, you can either incorporate it with your site's stylesheet, or load it externally through the `<link>` element in `<head>`.
+To install Paver, you will have to include the following resources in your page. The JS files should be loaded in the order stipulated below. For the CSS file, you can either incorporate it with your site's stylesheet, or load it externally through the `<link>` element in `<head>`.
 
 | Type | File Name            | Description                                                                                                            |
 |------|----------------------|------------------------------------------------------------------------------------------------------------------------|
@@ -90,13 +90,13 @@ $(function() {
 });
 ```
 
-As per standard jQuery plugins, `.paver()` will return the original object, allowing for further chaining if desired. For configuration options, please refer to [configuration options](usage-notes.html#configuration-options).
+As per standard jQuery plugins, `.paver()` will return the original object, allowing for further chaining if desired. For configuration options, please refer to [configuration options](http://terrymun.github.io/paver/demo/usage-notes.html#configuration-options).
 
 ----
 
 ## Resources and documentation
 ### Usage notes &amp; plugin configuration
-For detailed usage notes, please refer to the [Usage Notes](usage-notes.html) page. Plugin configuration options are also available in the page. Here is a brief overview of the possible configuration options for Paver:
+For detailed usage notes, please refer to the [Usage Notes](http://terrymun.github.io/paver/demo/usage-notes.html) page. Plugin configuration options are also available in the page. Here is a brief overview of the possible configuration options for Paver:
 
 ```js
 defaults = {
@@ -132,30 +132,29 @@ defaults = {
 ```
 
 ### Advanced usage
-For examples of advanced usage, please refer to the [Advanced Usage](advanced-usage.html) page.
+For examples of advanced usage, please refer to the [Advanced Usage](http://terrymun.github.io/paver/demo/advanced-usage.html) page.
 
 ### Custom triggers
-Paver supports custom triggers, which allows developers to force recomputation in the event of user-interaction that is not predicted, due to its non-exhaustiveness and limitless possibilities, by the plugin. In addition, Paver will also fire custom events to allow developers to track the initialization progress of the plugin. Please refer to [Custom Triggers & Events](custom-triggers-events.html) for more information.
+Paver supports custom triggers, which allows developers to force recomputation in the event of user-interaction that is not predicted, due to its non-exhaustiveness and limitless possibilities, by the plugin. In addition, Paver will also fire custom events to allow developers to track the initialization progress of the plugin. Please refer to [Custom Triggers & Events](http://terrymun.github.io/paver/demo/custom-triggers-events.html) for more information.
 
 ----
 
 ## Frequently Asked Questions
-1.  **Fluidbox is not working in my installation. Where should I start?**  
-Start by checking your browser's console log. What error messages do you see? Also, make sure that you are using the *latest* version of jQuery 1.x (minimum requirement: v1.8 or above) and that the dependencies have been loaded successfully. Also, did you remember reading the [usage precautions](#precautions)? You might have encountered a scenario where Fluidbox is not designed to handle.
+1.  **Paver is not working in my installation. Where should I start?**  
+Start by checking your browser's console log. What error messages do you see? Also, make sure that you are using the *latest* version of jQuery 1.x (minimum requirement: v1.8 or above) and that the dependencies have been loaded successfully. Also, did you remember reading the [usage precautions](#precautions)? You might have encountered a scenario where Paver is not designed to handle.
 
 2. **The image url isn't being interpretted correctly.**  
-Fluidbox fetches the larger image based on the URL specified in the `href` attribute if the wrapping anchor (`<a>`) tag. Spacebar characters in image URLs must be escaped properly, by the [RFC 2396 standard](http://tools.ietf.org/html/rfc2396).
+Paver fetches the original panorama based on the URL specified in the `src` attribute of the **first occuring** image element (`<img />`). Spacebar characters in image URLs must be escaped properly, as per the [RFC 2396 standard](http://tools.ietf.org/html/rfc2396).
 
 3. **I have a application-specific problem that I need help troubleshooting. Can you help me?**  
-*Of course!* I am more than happy to help, but it really depends if you have a clear problem statement and a [minimal, complete and verifiable example (MCVE)](http://stackoverflow.com/help/mcve) that I can play around with&mdash;I strongly encourage you to host your reduced test case(s) with either [JSFiddle](http://jsfiddle.net/), [CodePen](http://codepen.io/) or the likes. Then, [create a new issue](https://github.com/terrymun/Fluidbox/issues). I promise I will get back to you when I have time.
+*Of course!* I am more than happy to help, but it really depends if you have a clear problem statement and a [minimal, complete and verifiable example (MCVE)](http://stackoverflow.com/help/mcve) that I can play around with&mdash;I strongly encourage you to host your reduced test case(s) with either [JSFiddle](http://jsfiddle.net/), [CodePen](http://codepen.io/) or the likes. Then, [create a new issue](https://github.com/terrymun/Paver/issues). I promise I will get back to you when I have time.
 
 4. **Do you provide private support by email / phone call / Skype call / (insert any other forms of communication)?**  
-Since Fluidbox is provided as-is and free-of-charge, I am sorry to inform you that it is so far not possible for me to dedicate so much effort. However, you can follow what is described in step #4.
+Since Paver is provided as-is and free-of-charge, I am sorry to inform you that it is so far not possible for me to dedicate so much effort. However, you can follow what is described in step #4.
 
 
 ## Changelog
 | Version | Comments |
 |---------|----------|
 | 1.0.0   | Official release |
-
 
