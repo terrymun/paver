@@ -281,6 +281,73 @@ code {
 	}
 }
 
+/* Cards */
+/* Cards */
+.cards {
+	border-radius: .5rem;
+	display: flex;
+	flex-flow: row wrap;
+	margin: -.25rem;
+	margin-bottom: 1.25rem;
+	overflow: hidden;
+
+	svg {
+		display: block;
+		margin: 0 auto .75rem;
+		width: 5.25rem;
+		height: 5.25rem;
+		transition: all .125s ease-in-out;
+		path {
+      		transition: fill .125s ease-in-out;
+		}
+	}
+
+	& > a {
+		box-sizing: border-box;
+		border: none;
+		flex: 1 auto;
+		margin: 0 .25rem;
+		padding: 1rem;
+		position: relative;
+		overflow: hidden;
+		text-align: center;
+		transition: all .5s ease-in-out;
+
+		.branding {
+			transition: all .5s ease-in-out;
+		}
+
+		&::after {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			transition: all .5s cubic-bezier(0.19, 1, 0.22, 1);
+			transform: translateY(100%);
+			z-index: -1;
+		}
+
+		&.card-github {
+			background-color: transparent;
+			color: #4183c4;
+			flex-basis: auto;
+			&::after { background-color: #4183c4;}
+			svg.branding path { fill: #4183c4; }
+		}
+		&:hover {
+			color: #eee;
+			svg.branding {
+				transform: scale(1.25);
+				path { fill: #eee; }
+			}
+			&::after { transform: translateY(0); }
+		}
+	}
+}
+
 /* Main */
 main {
 	margin: 0 16.66667%;
