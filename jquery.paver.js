@@ -38,7 +38,7 @@
 				tiltSensitivity: 0.2,
 				tiltScrollerPersistence: 500,
 				tiltSmoothingFunction: 'tangent',
-				tiltThresholdPortrait: 16,
+				tiltThresholdPortrait: 12,
 				tiltThresholdLandscape: 24
 			},
 			global = {};
