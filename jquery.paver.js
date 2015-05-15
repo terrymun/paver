@@ -1,6 +1,6 @@
 // Paver
 // Description: A minimal panorama/image viewer replicating the effect seen in Facebook Pages app
-// Version: 1.0.0
+// Version: 1.0.1
 // Author: Terry Mun
 // Author URI: http://terrymun.com
 ;(function ( $, window, document, undefined ) {
@@ -37,16 +37,16 @@
 				tilt: true,
 				tiltSensitivity: 0.2,
 				tiltScrollerPersistence: 500,
-				tiltSmoothingFunction: 'gaussian',
-				tiltThresholdPortrait: 12,
+				tiltSmoothingFunction: 'tangent',
+				tiltThresholdPortrait: 16,
 				tiltThresholdLandscape: 24
-			};
+			},
+			global = {};
 
 		// The actual plugin constructor
-		var Plugin = function(element, options, check) {
+		var Plugin = function(element, options) {
 			// Assign element
 			this.element	= element;
-			this.check		= check;
 
 			// Merge defaults into options, into dataset
 			this.settings	= $.extend({}, defaults, options, $(this.element).data());
@@ -63,18 +63,18 @@
 			this._name		= pluginName;
 
 			// Initialize
-			if(this.check.features.hasGyroscope === true) {
+			if(global.features.hasGyroscope === true) {
 				// Has functional gyroscope
 				this.init();
 			} else {
 				// No functional gyroscope
-				if(this.check.features.isTouch) {
+				if(global.features.isTouch) {
 					this.fallback();
 				} else {
 					this.init();
 				}
 			}
-		}
+		};
 
 		// Public functions
 		$.extend(Plugin.prototype, {
@@ -120,11 +120,8 @@
 						// Compute
 						_fun.compute(paver);
 
-						// Check if we really need to bind events
-						if(
-							paver.instanceData.containerAspectRatio <= paver.instanceData.panoAspectRatio &&
-							paver.instanceData.outerWidth <= paver.instanceData.computedWidth - paver.settings.minimumOverflow
-						) {
+						// Check
+						if(_fun.checkOverflow(paver)) {
 							// Position panorama centrally the first time
 							paver.instanceData.panCounter = 0;
 							paver.pan({
@@ -133,37 +130,34 @@
 							});
 
 							// Turn on paver
-							paver.$t.addClass('paver--on');
-
-							// Bind events
-							_fun.bindEvents(paver);
-
-							// Update dimensions and recompute upon window resize, or custom event
-							$w.on('resize', $.throttle(paver.settings.resizeThrottle, function() {
-								paver.recompute();
-							}));
-
-							// Here we call public functions by listening to namespaced events
-							// Recompute
-							paver.$t.on('recompute.paver', function() {
-								paver.recompute();
-							});
-
-							// Destroy
-							paver.$t.on('destroy.paver', function() {
-								paver.destroy();
-							});
-
-							// Pan
-							paver.$t.on('pan.paver', function(e, ratio) {
-								paver.pan(ratio);
-							});
-
+							_fun.paverOn(paver);
 						} else {
-
+							// Turn off paver
+							_fun.paverOff(paver);
 						}
+
+						// Update dimensions and recompute upon window resize, or custom event
+						$w.on('resize', $.throttle(paver.settings.resizeThrottle, function() {
+							paver.recompute();
+						}));
+
+						// Here we call public functions by listening to namespaced events
+						// Recompute
+						paver.$t.on('recompute.paver', function() {
+							paver.recompute();
+						});
+
+						// Destroy
+						paver.$t.on('destroy.paver', function() {
+							paver.destroy();
+						});
+
+						// Pan
+						paver.$t.on('pan.paver', function(e, ratio) {
+							paver.pan(ratio);
+						});
 							
-					}
+					};
 					img.src = paver.$p.attr('src');
 
 				}
@@ -212,9 +206,10 @@
 			unbindEvents: function() {
 				$(this.element)
 				.off('mousemove.paver devicetilt.paver')
-				.removeClass('paver--on');
+				.removeClass('paver--on')
+				.addClass('paver--off');
 			},
-			destroy: function(a) {
+			destroy: function() {
 				var pluginData = $(this.element).data('plugin_paver');
 
 				if(pluginData) {
@@ -248,14 +243,21 @@
 				$t.trigger('recomputeStart.paver');
 				_fun.compute(this);
 
-				// Pan to last known position
-				paver.pan({
-					xPos: Math.min(paver.instanceData.lastPanX,1),
-					yPos: Math.min(paver.instanceData.lastPanY,1)
-				});
+				// Check overflow
+				if(_fun.checkOverflow(this)) {
+					// Pan to last known position
+					paver.pan({
+						xPos: Math.min(paver.instanceData.lastPanX,1),
+						yPos: Math.min(paver.instanceData.lastPanY,1)
+					});
 
-				// Rebind events
-				_fun.bindEvents(this);
+					// Turn paver on
+					_fun.paverOn(this);
+				} else {
+					// Turn off paver
+					_fun.paverOff(this);
+				}
+				
 			},
 			pan: function(ratio) {
 
@@ -270,7 +272,7 @@
 					ratio = {
 						xPos: paver.settings.startPosition,
 						yPos: paver.settings.startPosition
-					}
+					};
 				} else {
 					if(ratio.xPos === undefined) ratio.xPos = paver.settings.startPosition;
 					if(ratio.yPos === undefined) ratio.yPos = paver.settings.startPosition;
@@ -383,6 +385,10 @@
 					return _fun.normalcdf(0, 0.375, delta/threshold);
 				}
 			},
+			lowPassFilter: function(curSignal, prevSignal, alpha) {
+				if (prevSignal === null) return curSignal;
+				return (alpha * curSignal) + ((1 - alpha) * prevSignal);
+			},
 
 			//// --------------- ////
 			//// Paver functions ////
@@ -449,6 +455,40 @@
 				paver.$t.trigger('ready.paver');
 				paver.instanceData.ready = true;
 			},
+			checkOverflow: function(paver) {
+				// Check if we really need to bind events
+				if(
+					paver.instanceData.containerAspectRatio <= paver.instanceData.panoAspectRatio &&
+					paver.instanceData.outerWidth <= paver.instanceData.computedWidth - paver.settings.minimumOverflow
+				) return true;
+				return false;
+			},
+			paverOn: function(paver) {
+				// Turn on paver
+				paver.$t.removeClass('paver--off').addClass('paver--on');
+
+				// Bind events
+				_fun.bindEvents(paver);
+			},
+			paverOff: function(paver) {
+				// Turn off paver
+				paver.unbindEvents(paver);
+
+				// If responsiveness is desired, we resize panorama to fill the original parent container
+				if(paver.settings.responsive === true) {
+					if(paver.instanceData.naturalWidth > paver.instanceData.outerWidth) {
+						paver.$t
+						.css('min-height', paver.instanceData.outerWidth/paver.instanceData.panoAspectRatio)
+						.find('div.paver__pano')
+							.css({
+								width: paver.instanceData.outerWidth,
+								height: paver.instanceData.outerWidth/paver.instanceData.panoAspectRatio,
+								left: '50%',
+								transform: 'translateX(-50%)'
+							});
+					}
+				}
+			},
 			compute: function(paver) {
 				// Get computed dimensions
 				paver.instanceData.computedWidth	= paver.instanceData.outerHeight * paver.instanceData.panoAspectRatio;
@@ -467,8 +507,8 @@
 				paver.$t.trigger('computeEnd.paver');
 			},
 			bindEvents: function(paver) {
-				if(paver.check.features.isTouch) {
-					if(paver.check.features.hasGyroscope){
+				if(global.features.isTouch) {
+					if(global.features.hasGyroscope){
 						_fun.bindOrientationEvents(paver);
 					}
 				} else {
@@ -492,107 +532,112 @@
 				
 			},
 			bindOrientationEvents: function(paver) {
-				paver.$t.on('devicetilt.paver', $.throttle(paver.settings.panningThrottle, function(e, alpha, beta, gamma) {
+				// Declare empty object for tilt change from baseline
+				paver.instanceData.prevTilt = {};
 
-					// Declare scroller
-					var scrollerTimer;
+				// Declare scrollerTimer
+				var scrollerTimer = null;
+
+				paver.$t.on('devicetilt.paver', $.throttle(paver.settings.panningThrottle, function(e, tilt) {
 					
-					// Declare empty object for tilt change from baseline
-					paver.instanceData.deltaTilt = {};
-
 					// Is scroller persistence turned on?
 					if(paver.settings.tiltScrollerPersistence === 0) {
 						// We want scroller to appear all the time
-						paver.$t.addClass('paver-tilting');
+						paver.$t.addClass('paver--tilting');
 					} else {
 						// We only want to conditionally enable scroller
 						// Is the tilting beyond a threshold?
 						if(
-							!$.isEmptyObject(paver.instanceData.deltaTilt) &&
-							(
-								Math.abs(paver.instanceData.deltaTilt.alpha - alpha + paver.check.startTilt.alpha) > paver.settings.tiltSensitivity ||
-								Math.abs(paver.instanceData.deltaTilt.beta - beta + paver.check.startTilt.beta) > paver.settings.tiltSensitivity ||
-								Math.abs(paver.instanceData.deltaTilt.gamma - gamma + paver.check.startTilt.gamma) > paver.settings.tiltSensitivity
-							)
+							// We accept both cases:
+							// 1. When previous tilt data is available, make sure that the difference is beyond tiltSensitivity
+							// 2. When previous tilt data is unavailable, go right ahead
+							(!$.isEmptyObject(paver.instanceData.prevTilt) &&
+								(
+									Math.abs(paver.instanceData.prevTilt.b - tilt.b) > paver.settings.tiltSensitivity ||
+									Math.abs(paver.instanceData.prevTilt.g - tilt.g) > paver.settings.tiltSensitivity
+								)
+							) || $.isEmptyObject(paver.instanceData.prevTilt)
 						) {
+							// Paver is tilting, so we show the scroller
 							paver.$t.addClass('paver--tilting');
-							if(!scrollerTimer) {
-								scrollerTimer = window.setTimeout(function() {
-									paver.$t.removeClass('paver--tilting');
-								}, paver.settings.tiltScrollerPersistence);
+							if(scrollerTimer !== null) {
+								clearTimeout(scrollerTimer);
 							}
+							scrollerTimer = window.setTimeout(function() {
+								paver.$t.removeClass('paver--tilting');
+							}, paver.settings.tiltScrollerPersistence);
+							// Declare screen-adjusted screen tilt, ratio and thresholds
+							var screenTilt = {},
+								tiltThreshold,
+								smooth = _fun.smoothingFunction[paver.settings.tiltSmoothingFunction];
+
+							// Listen to adjusted beta and gamma, as well as the appropriate tilt thresholds
+							// According to screen orientation
+							switch(global.screenOrientationAngle) {
+								case 0:
+									// Portrait-primary
+									screenTilt = {
+										beta:	tilt.b,
+										gamma:	tilt.g
+									};
+									tiltThreshold = paver.settings.tiltThresholdPortrait;
+									break;
+
+								case 180:
+								case -180:
+									// Portrait-secondary
+									screenTilt = {
+										beta:	-tilt.b,
+										gamma:	-tilt.g
+									};
+									tiltThreshold = paver.settings.tiltThresholdPortrait;
+									break;
+
+								case 90:
+								case -270:
+									// Landscape-primary
+									screenTilt = {
+										beta:	-tilt.g,
+										gamma:	tilt.b
+									};
+									tiltThreshold = paver.settings.tiltThresholdLandscape;
+									break;
+
+								case 270:
+								case -90:
+									// Landscape-secondary
+									screenTilt = {
+										beta:	tilt.g,
+										gamma:	-tilt.b
+									};
+									tiltThreshold = paver.settings.tiltThresholdLandscape;
+									break;
+
+								default:
+									// Portrait-primary
+									screenTilt = {
+										beta:	tilt.b,
+										gamma:	tilt.g
+									};
+									tiltThreshold = paver.settings.tiltThresholdPortrait;
+									break;
+							}
+
+							paver.pan({
+								xPos: smooth(screenTilt.gamma, tiltThreshold),
+								yPos: smooth(screenTilt.beta, tiltThreshold)
+							});
+
+							// Store current tilt
+							paver.instanceData.prevTilt = {
+								a: tilt.a,
+								b: tilt.b,
+								g: tilt.g
+							};
 						}
 					}
 
-					// Update change in tilt (deltaTilt)
-					paver.instanceData.deltaTilt = {
-						alpha:	alpha - paver.check.startTilt.alpha,
-						beta:	beta - paver.check.startTilt.beta,
-						gamma:	gamma - paver.check.startTilt.gamma
-					};
-
-					// Declare screen-adjusted screen tilt, ratio and thresholds
-					var screenTilt = {},
-						tiltThreshold,
-						smooth = _fun.smoothingFunction[paver.settings.tiltSmoothingFunction];
-
-					// Listen to adjusted beta and gamma, as well as the appropriate tilt thresholds
-					// According to screen orientation
-					switch(paver.check.screenOrientationAngle) {
-						case 0:
-							// Portrait-primary
-							screenTilt = {
-								beta:	paver.instanceData.deltaTilt.beta,
-								gamma:	paver.instanceData.deltaTilt.gamma
-							};
-							tiltThreshold = paver.settings.tiltThresholdPortrait;
-							break;
-
-						case 180:
-						case -180:
-							// Portrait-secondary
-							screenTilt = {
-								beta:	-paver.instanceData.deltaTilt.beta,
-								gamma:	-paver.instanceData.deltaTilt.gamma
-							};
-							tiltThreshold = paver.settings.tiltThresholdPortrait;
-							break;
-
-						case 90:
-						case -270:
-							// Landscape-primary
-							screenTilt = {
-								beta:	-paver.instanceData.deltaTilt.gamma,
-								gamma:	paver.instanceData.deltaTilt.beta
-							};
-							tiltThreshold = paver.settings.tiltThresholdLandscape;
-							break;
-
-						case 270:
-						case -90:
-							// Landscape-secondary
-							screenTilt = {
-								beta:	paver.instanceData.deltaTilt.gamma,
-								gamma:	-paver.instanceData.deltaTilt.beta
-							};
-							tiltThreshold = paver.settings.tiltThresholdLandscape;
-							break;
-
-						default:
-							// Portrait-primary
-							screenTilt = {
-								beta:	paver.instanceData.deltaTilt.beta,
-								gamma:	paver.instanceData.deltaTilt.gamma
-							};
-							tiltThreshold = paver.settings.tiltThresholdPortrait;
-							break;
-					}
-
-					paver.pan({
-						xPos: smooth(screenTilt.gamma, tiltThreshold),
-						yPos: smooth(screenTilt.beta, tiltThreshold)
-					});
-
+					
 				}));
 			}
 		};
@@ -602,11 +647,10 @@
 		$.fn.paver = function(options) {
 
 			var t = this,
-				check,
 				args = arguments;
 
 			// Global data
-			check = {
+			global = {
 				features: {
 					isTouch: false,
 					hasGyroscope: false,
@@ -622,15 +666,15 @@
 				isTouch: function() {
 					try {
 						document.createEvent('TouchEvent');
-						check.features.isTouch = true;
+						global.features.isTouch = true;
 					} catch (e) {
-						check.features.isTouch = false;
+						global.features.isTouch = false;
 					}
 				},
 				// Does it have a working gyroscope?
 				hasGyroscope: function() {
 					var d = new $.Deferred(),
-						h = function(e) {
+						handler = function(e) {
 							// Check if we have any useful gyroscopic data
 							if(e.alpha !== null && e.beta !== null && e.gamma !== null) {
 								d.resolve({
@@ -654,12 +698,12 @@
 							}
 							
 							// Listen to device orientation once and remove listener immediately
-							window.removeEventListener('deviceorientation', h, false);
+							window.removeEventListener('deviceorientation', handler, false);
 						};
 
-					// Check of DeviceOrientationEvent is even supported first
+					// Check if DeviceOrientationEvent is supported
 					if (window.DeviceOrientationEvent) {
-						window.addEventListener('deviceorientation', h, false);
+						window.addEventListener('deviceorientation', handler, false);
 					} else {
 						d.reject({
 							status: {
@@ -675,7 +719,7 @@
 				// What is the device orientation?
 				// Logic from Full-Tilt: https://github.com/richtr/Full-Tilt/
 				hasOrientation: function() {
-					check.screenOrientationAngle = (check.features.hasScreenOrientationAPI ? window.screen.orientation.angle : (window.orientation || 0));
+					global.screenOrientationAngle = (global.features.hasScreenOrientationAPI ? window.screen.orientation.angle : (window.orientation || 0));
 				}
 			};
 
@@ -691,12 +735,12 @@
 			$.when(_check.hasGyroscope()).then(function(gyroData) {
 				// We have gyroscopic data!
 				// Do paver
-				check.features.hasGyroscope = true;
+				global.features.hasGyroscope = true;
 
 				// Establish startTilt
-				check.startTilt.alpha	= gyroData.orientation.alpha;
-				check.startTilt.beta	= gyroData.orientation.beta;
-				check.startTilt.gamma	= gyroData.orientation.gamma;
+				global.startTilt.alpha	= gyroData.orientation.alpha;
+				global.startTilt.beta	= gyroData.orientation.beta;
+				global.startTilt.gamma	= gyroData.orientation.gamma;
 
 				// Trigger event
 				$d.trigger('hasGyroscopeData.paver', [gyroData]);
@@ -706,7 +750,7 @@
 
 			}, function(gyroData) {
 				// We do not have gyroscopic data
-				check.features.hasGyroscope = false;
+				global.features.hasGyroscope = false;
 
 				// Trigger event
 				$d.trigger('hasNoGyroscopeData.paver', [gyroData]);
@@ -720,10 +764,16 @@
 				var $t = $(this);
 
 				// Listen to starting tilt, only when gyroscopic data is available
+				// Tilt is relative to startTilt
 				var deviceOrientationHandler = function(e) {
-					$t.trigger('devicetilt.paver', [e.alpha, e.beta, e.gamma]);
+					var t = {
+							a: e.alpha - global.startTilt.alpha,
+							b: e.beta - global.startTilt.beta,
+							g: e.gamma - global.startTilt.gamma
+						};
+					$t.trigger('devicetilt.paver', [t]);
 				};
-				if(check.features.hasGyroscope) {
+				if(global.features.hasGyroscope) {
 					window.addEventListener('deviceorientation', deviceOrientationHandler, false);
 				}
 
@@ -738,11 +788,7 @@
 						if(!$.data(this, 'plugin_' + pluginName)) {
 
 							// Initialize plugin and store
-							$.data(this, 'plugin_' + pluginName, new Plugin(this, options, check));
-
-							// Allow individual element access to global check
-							var c = $(this).data('plugin_' + pluginName);
-							c.check = check;
+							$.data(this, 'plugin_' + pluginName, new Plugin(this, options));
 						}
 					});
 
@@ -766,6 +812,6 @@
 
 			// Return
 			return t;
-		}
+		};
 
 })( jQuery, window, document );

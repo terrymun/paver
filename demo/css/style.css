@@ -558,7 +558,8 @@ footer {
     font-size: 2rem; }
 
   *[data-paver], .panorama {
-    height: 100vh;
+    height: 50vh;
+    min-height: 300px;
     max-height: 600px;
     position: relative;
     left: -3rem;
