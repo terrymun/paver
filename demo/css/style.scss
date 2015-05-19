@@ -247,6 +247,9 @@ aside + pre[class*='language-'] {
 			border-bottom-color: rgba(#eee, 1);
 		}
 	}
+	code a {
+		color: #333;
+	}
 	&.warning {
 		background: rgb(206,129,57); /* Old browsers */
 		background: linear-gradient(135deg,  rgba(206,129,57,1) 0%,rgba(177,49,49,1) 100%); /* W3C */

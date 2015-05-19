@@ -218,6 +218,8 @@ aside + pre[class*='language-'] {
     color: #eee; }
     .user-message a:hover {
       border-bottom-color: #eeeeee; }
+  .user-message code a {
+    color: #333; }
   .user-message.warning {
     background: #ce8139;
     /* Old browsers */
