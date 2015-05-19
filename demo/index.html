@@ -28,6 +28,14 @@
 			<h1><a href="index.html" title="Paver Home">Paver.</a></h1>
 			<span class="byline">Replicating the photo viewer/panner seen on the experimental Facebook Pages app</span>
 		</div>
+		<nav>
+			<ul>
+				<li class="active"><a href="index.html" title="Main">Main</a></li>
+				<li><a href="usage-notes.html" title="Usage notes">Usage Notes</a></li>
+				<li><a href="advanced-usage.html" title="Advaned usage">Advanced Usage</a></li>
+				<li><a href="custom-triggers-events.html" title="Custom triggers &amp; events">Custom Triggers &amp; Events</a></li>
+			</ul>
+		</nav>
 	</header>
 
 	<main id="content">
@@ -70,10 +78,12 @@
 			</div>
 			<h3 id="conundrum">The conundrum</h3>
 			<p>There is indeed an extremely lightweight way of displaying panoramas on a page&mdash;you simply wrap it within a container which allows content to oveflow along the x-axis. The markup is straightfoward:</p>
+			<aside>The basic markup for a CSS-only panorama viewer, which also works for Paver.</aside>
 			<pre class="language-markup" id="basic-markup"><code>&lt;div class="panorama"&gt;
     &lt;img src=&quot;/path/to/image&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;
 &lt;/div&gt;</code></pre>
 			<p>&hellip;and the CSS (in SASS/SCSS flavour) would look something like this:</p>
+			<aside>The styles for a CSS-only panorama viewer, which Paver will fall back on in the event of a failure.</aside>
 			<pre class="language-scss" id="basic-styles"><code>.panorama {
 	height: 400px;
 	overflow-x: scroll;

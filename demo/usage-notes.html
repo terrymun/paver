@@ -28,14 +28,15 @@
 			<h1><a href="../index.html" title="Paver Home">Paver.</a></h1>
 			<span class="byline">Replicating the photo viewer/panner seen on the experimental Facebook Pages app</span>
 		</div>
+		<nav>
+			<ul>
+				<li><a href="index.html" title="Main">Main</a></li>
+				<li class="active"><a href="usage-notes.html" title="Usage notes">Usage Notes</a></li>
+				<li><a href="advanced-usage.html" title="Advaned usage">Advanced Usage</a></li>
+				<li><a href="custom-triggers-events.html" title="Custom triggers &amp; events">Custom Triggers &amp; Events</a></li>
+			</ul>
+		</nav>
 	</header>
-
-	<nav id="breadcrumb">
-		<ul>
-			<li><a href="../index.html" title="Paver">Paver Home</a></li>
-			<li><a href="custom-events" title="Custom Events">Usage Notes</a></li>
-		</ul>
-	</nav>
 
 	<main id="content">
 		<section>
@@ -171,6 +172,82 @@
 					</tr>
 				</tbody>
 			</table>
+
+			<h3 id="smoothing-functions">Smoothing Functions</h3>
+			<p class="user-message note">As of v1.2.0, you can now declare your own smoothing functions. Please refer to <a href="advanced-usage.html#custom-smoothing-functions" title="Advanced Usage&mdash;Custom Smoothing Functions">advaned usage for an example</a>.</p>
+			<p>Paver comes with four smoothing functions that converts cursor coordinates and/or device tilt into CSS transforms that will pan your panoramas. Note that these functions accept variables mapped to the range of $[-1,1]$, where 0 represents the center of the panorama, and will transform outputs mapped to the range of $[0,1]$, where 0.5 represents the center of the panorama. The reasoning behind this is that device tilt can take on negative and positive values&mdash;cursor coordinates are simply mapped to $[-1,1]$ prior to passing them into smoothing functions.</p>
+			<p>Note: in mathematical terms, square brackets is the representation of the concept "<em>inclusive of</em>", i.e. $[-1,1]$ is inclusive of $-1$ and $1$, or $-1 \le n \le 1$.</p>
+			<ul id="smoothing-functions__list">
+				<li>
+					<h4>Linear</h4>
+					<div class="graph">
+						<div class="graph-plot" id="smoothing-function__linear"></div>
+						<div class="graph-equation">
+							$$
+							\begin{align}
+							y &= f(x) \\ &= \frac{\left(x+1\right)}{2}
+							\end{align}
+							$$
+							$$\textrm{where } x = [-1,1] \textrm{ and } f(x) = [0,1]$$
+						</div>
+					</div>
+					<p>The simplest of all, this function simply transforms $x$ linearly, from its original range of $[-1,1]$, to $f(x)$ with a range of $[0,1]$. This is the default smoothing function (a misnomer, actually, since it is not smoothing anything) for cursor position.</p>
+				</li>
+				<li>
+					<h4>Tangent</h4>
+					<div class="graph">
+						<div class="graph-plot" id="smoothing-function__tangent"></div>
+						<div class="graph-equation">
+							$$
+							\begin{align}
+							y &= f(x) \\ &= \frac{1}{2} \left[\frac{\tan \left(0.351 \pi x \right)}{2} + 1 \right]
+							\end{align}
+							$$
+							$$\textrm{where } x = [-1,1] \textrm{ and } f(x) = [0,1]$$
+						</div>
+					</div>
+					<p>This function transforms $x$ in the range of $[-1,1]$ via a tangent function. Since the transformation of the tangent curve is imprecise and only down to three decimal places, the range of $f(x)$ lies <em>approximately</em> between $[0,1]$.</p>
+				</li>
+				<li>
+					<h4>Cosine</h4>
+					<div class="graph">
+						<div class="graph-plot" id="smoothing-function__cosine"></div>
+						<div class="graph-equation">
+						$$
+						\begin{align}
+						y &= f(x) \\ &= \frac{1}{2} \left[ \sin\left(\frac{x}{2}\right) + 1 \right]
+						\end{align}
+						$$
+						$$\textrm{where } x = [-1,1] \textrm{ and } f(x) = [0,1]$$
+						</div>
+					</div>
+					<p>This function transforms $x$ in the range of $[-1,1]$ via a cosine function. The output, $f(x)$, again lies in the range of $[0,1]$.</p>
+					</div>
+				</li>
+				<li>
+					<h4>Gaussian</h4>
+					<div class="graph">
+						<div class="graph-plot" id="smoothing-function__gaussian"></div>
+						<div class="graph-equation">
+						$$
+						\begin{align}
+						y &= f(x)
+						\\ &= \frac{1}{\sigma \sqrt{2\pi}} \int_{-\infty}^x \! e^{-(x - \mu)^2/2\sigma^2} \textrm{d}x
+						\\ &= \frac{1}{2} \left[ \textrm{erf} \left( \frac{x - \mu}{\sigma \sqrt{2}} \right) + 1 \right]
+						\end{align}
+						$$
+						$$
+						\begin{align}
+						\textrm{where } & x = [-1,1] \textrm{ and } f(x) = [0,1]
+						\\ & \mu = 1 \textrm{ and } \sigma = 0.375
+						\end{align}
+						$$
+						</div>
+					</div>
+					<p>This function is a simplified equation of the cumulative distribution function of a normal distribution. This is the default smoothing function for device tilt angles, provided by the gyroscope (if present). Note that since the error function $\textrm{erf}()$ is <a href="http://en.wikipedia.org/wiki/Normal_distribution#Numerical_approximations_for_the_normal_CDF" title="Normal distribution - Wikipedia">simply an approximation</a> (code adapted from a <a href="http://stackoverflow.com/a/14873282/395910" title="std normal cdf, normal cdf, or error function">StackOverflow answer</a>), the range of $f(x)$ will only be accurate to at most 9 decimal points (which is more than sufficient, anyway).</p>
+					</p>
+				</li>
+			</ul>
 		</section>
 	</main>
 
@@ -185,7 +262,210 @@
 		<p>Code, design &amp; photos by <a href="http://terrymun.com/" title="Terry Mun">Terry Mun</a> &middot; 2015</p>
 		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+		<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 		<script type="text/javascript" src="./js/functions.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				// Math formulas
+				var smoothingFunction = {
+					linear: function(r) {
+						return 0.5 * (r+1);
+					},
+					tangent: function(r) {
+						return 0.5 * (0.5*Math.tan(r * (Math.PI*0.351)) + 1);
+					},
+					cosine: function(r) {
+						return 0.5 * (Math.sin(r * (Math.PI/2)) + 1);
+					},
+					gaussian: function(r) {
+						var z = (r)/Math.sqrt(2*0.375*0.375);
+						var t = 1/(1+0.3275911*Math.abs(z));
+						var a1 =  0.254829592;
+						var a2 = -0.284496736;
+						var a3 =  1.421413741;
+						var a4 = -1.453152027;
+						var a5 =  1.061405429;
+						var erf = 1-(((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-z*z);
+						var sign = 1;
+						if(z < 0) sign = -1;
+						return 0.5 * (1+sign*erf);
+					}
+				};
+
+				// Graph dimensions
+				var m = [50,50,50,50],	// Margins
+					w = 500 - m[1] - m[3],	// Width
+					h = 500 - m[0] - m[2];	// Height
+
+				// Data points
+				var n = 100;
+
+				// Array of charts
+				var graphs = [{
+						id: 'linear'
+					}, {
+						id: 'tangent'
+					}, {
+						id: 'cosine'
+					}, {
+						id: 'gaussian'
+					}];
+
+				// Loop through all graphs
+				$.each(graphs, function(i,graph) {
+					var data = [],
+						smooth = smoothingFunction[graph.id];
+
+					for (var k = 0; k < n; k++) {
+						data.push({
+							x: k/n,
+							y: smooth((2*k/n-1))
+						});
+					}
+
+					// Map data
+					var dataX = data.map(function(d,i) { return parseFloat(d.x); }),
+						dataY = data.map(function(d,i) { return parseFloat(d.y); });
+
+					// Scale
+					var x = d3.scale.linear().domain([0, 1]).range([0, w]),
+						y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+
+					// Line
+					var line = d3.svg.line()
+						.x(function(d) { return x(parseFloat(d.x)); })
+						.y(function(d) { return y(parseFloat(d.y)); });
+
+					// Graph
+					var graph = d3.select('#smoothing-function__'+graph.id)
+						.append('svg:svg')
+							.attr({
+								'width': w + m[1] + m[3],
+								'height': h + m[0] + m[2],
+								'viewBox': '0 0 ' + (w + m[1] + m[3]) + ' ' + (h + m[0] + m[2]),
+								'preserveAspectRatio': 'xMidYMid meet'
+							})
+						.append('svg:g')
+							.attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
+
+						// Draw grid lines
+						graph
+						.selectAll("line.x.major")
+							.data(x.ticks(4))
+							.enter()
+								.append("line")
+									.attr({
+										'class': 'x major',
+										'x1': x,
+										'x2': x,
+										'y1': 0,
+										'y2': h
+									});
+						graph
+						.selectAll("line.y.major")
+							.data(y.ticks(4))
+							.enter()
+								.append("line")
+									.attr({
+										'class': 'y major',
+										'x1': 0,
+										'x2': w,
+										'y1': y,
+										'y2': y
+									});
+
+					// Create x and y axes
+					var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(2).tickValues([0.5,1]),
+						yAxis = d3.svg.axis().scale(y).orient('left').ticks(2).tickValues([0.5,1]);
+
+					// Add the axes
+					graph.append('svg:g')
+						.attr({
+							'class': 'x axis',
+							'transform': 'translate(0,' + h + ')'
+						})
+						.call(xAxis)
+					.append('svg:g')
+						.attr({
+							'class': 'y axis',
+							'transform': 'translate(0,-' + h + ')'
+						})
+						.call(yAxis);
+
+					// Add middle line
+					graph
+					.append('svg:line')
+						.attr({
+							'class': 'horizontal middle-line',
+							'x1': 0,
+							'x2': 0.5 * w,
+							'y1': 0.5 * h,
+							'y2': 0.5 * h
+						});
+					graph
+					.append('svg:line')
+						.attr({
+							'class': 'vertical middle-line',
+							'x1': 0.5 * w,
+							'x2': 0.5 * w,
+							'y1': 0.5 * h,
+							'y2': h
+						});
+
+					// Add line to graph
+					graph
+					.append('svg:path')
+						.attr('d', line(data));
+
+					// Add center dot to graph
+					graph.append('svg:circle')
+						.attr({
+							'class': 'middle-dot',
+							'cx': 0.5 * (w),
+							'cy': 0.5 * (h),
+							'r': 10
+						});
+				});
+
+				// Mathjax
+				MathJax.Hub.Config({
+					"HTML-CSS": {
+						preferredFont: "TeX",
+						availableFonts: ["STIX","TeX"],
+						linebreaks: {
+							automatic: true
+						},
+						EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+					},
+					tex2jax: {
+						inlineMath: [
+							["$", "$"],
+							["\\\\(","\\\\)"]
+						],
+						displayMath: [
+							["$$","$$"],
+							["\\[", "\\]"]
+						],
+						processEscapes: true
+					},
+					TeX: {
+						noUndefined: {
+							attributes: {
+								mathcolor: "red",
+								mathbackground: "#FFEEEE",
+								mathsize: "90%"
+							}
+						},
+						Macros: {
+							href: "{}"
+						}
+					},
+					messageStyle: "none"
+				});
+
+			});
+		</script>
 	</footer>
 </body>
 </html>

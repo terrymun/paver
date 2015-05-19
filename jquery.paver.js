@@ -1,6 +1,6 @@
 // Paver
 // Description: A minimal panorama/image viewer replicating the effect seen in Facebook Pages app
-// Version: 1.0.1
+// Version: 1.2.0
 // Author: Terry Mun
 // Author URI: http://terrymun.com
 ;(function ( $, window, document, undefined ) {
@@ -37,7 +37,7 @@
 				tilt: true,
 				tiltSensitivity: 0.2,
 				tiltScrollerPersistence: 500,
-				tiltSmoothingFunction: 'tangent',
+				tiltSmoothingFunction: 'gaussian',
 				tiltThresholdPortrait: 12,
 				tiltThresholdLandscape: 24
 			},
@@ -61,6 +61,9 @@
 
 			// Store plugin name
 			this._name		= pluginName;
+
+			// Store and expose mouse coordinates
+			this.mousemove = {};
 
 			// Initialize
 			if(global.features.hasGyroscope === true) {
@@ -372,7 +375,7 @@
 				tangent: function(delta, threshold) {
 					if (delta >= threshold) return 1;
 					if (delta <= -threshold) return 0;
-					return 0.5 * (Math.tan((delta/threshold) * (Math.PI/4)) + 1);
+					return 0.5 * (0.5 * Math.tan((delta/threshold) * (Math.PI * 0.351)) + 1);
 				},
 				cosine: function(delta, threshold) {
 					if (delta >= threshold) return 1;
@@ -384,10 +387,6 @@
 					if (delta <= -threshold) return 0;
 					return _fun.normalcdf(0, 0.375, delta/threshold);
 				}
-			},
-			lowPassFilter: function(curSignal, prevSignal, alpha) {
-				if (prevSignal === null) return curSignal;
-				return (alpha * curSignal) + ((1 - alpha) * prevSignal);
 			},
 
 			//// --------------- ////
@@ -506,6 +505,7 @@
 				// Fire custom event
 				paver.$t.trigger('computeEnd.paver');
 			},
+			// Generic handler to bind all events
 			bindEvents: function(paver) {
 				if(global.features.isTouch) {
 					if(global.features.hasGyroscope){
@@ -518,19 +518,38 @@
 				// Fire custom event
 				paver.$t.trigger('eventsBound.paver');
 			},
+			// Bind evens when mousemove is fired
 			bindMouseEvents: function(paver) {
 				paver.$t.on('mousemove.paver', $.throttle(paver.settings.panningThrottle, function(e) {
-					// Calculate ratio
-					var smooth = _fun.smoothingFunction[paver.settings.mouseSmoothingFunction];
+					// Update exposed mouse coordinates
+					paver.mousemove.dX = (e.pageX - paver.instanceData.offsetX) - paver.instanceData.centerX;
+					paver.mousemove.dY = (e.pageY - paver.instanceData.offsetY) - paver.instanceData.centerY;
 
-					// Set transform
-					paver.pan({
-						xPos: smooth((e.pageX - paver.instanceData.offsetX) - paver.instanceData.centerX, paver.instanceData.centerX),
-						yPos: smooth((e.pageY - paver.instanceData.offsetY) - paver.instanceData.centerY, paver.instanceData.centerY)
-					});
+					// Define smoothing function
+					var smooth;
+					if(typeof paver.settings.mouseSmoothingFunction === 'string') {
+						_fun.defaultSmooth(paver, paver.settings.mouseSmoothingFunction, paver.mousemove.dX, paver.instanceData.centerX, paver.mousemove.dY, paver.instanceData.centerY);
+					} else if(typeof paver.settings.mouseSmoothingFunction === 'function') {
+						// Make call to custom smoothing function
+						var customPos = paver.settings.mouseSmoothingFunction.call(paver, paver.mousemove.dX, paver.instanceData.centerX, paver.mousemove.dY, paver.instanceData.centerY);
+
+						// Sanity check
+						if(customPos !== undefined) {
+							// Set transform
+							paver.pan({
+								xPos: customPos.x,
+								yPos: customPos.y
+							});
+						} else {
+							_fun.defaultSmooth(paver, defaults.settings.mouseSmoothingFunction, paver.mousemove.dX, paver.instanceData.centerX, paver.mousemove.dY, paver.instanceData.centerY);
+						}
+					}
+
+					
 				}));
 				
 			},
+			// Bind events that are triggered during device orientation changes (tilting)
 			bindOrientationEvents: function(paver) {
 				// Declare empty object for tilt change from baseline
 				paver.instanceData.prevTilt = {};
@@ -566,10 +585,10 @@
 							scrollerTimer = window.setTimeout(function() {
 								paver.$t.removeClass('paver--tilting');
 							}, paver.settings.tiltScrollerPersistence);
+
 							// Declare screen-adjusted screen tilt, ratio and thresholds
 							var screenTilt = {},
-								tiltThreshold,
-								smooth = _fun.smoothingFunction[paver.settings.tiltSmoothingFunction];
+								tiltThreshold;
 
 							// Listen to adjusted beta and gamma, as well as the appropriate tilt thresholds
 							// According to screen orientation
@@ -623,10 +642,28 @@
 									break;
 							}
 
-							paver.pan({
-								xPos: smooth(screenTilt.gamma, tiltThreshold),
-								yPos: smooth(screenTilt.beta, tiltThreshold)
-							});
+							// Define smoothing function
+							var smooth;
+
+							// Check if custom smoothing function
+							if(typeof paver.settings.tiltSmoothingFunction === 'string') {
+								_fun.defaultSmooth(paver, paver.settings.tiltSmoothingFunction, screenTilt.gamma, tiltThreshold, screenTilt.beta,tiltThreshold);
+							} else if(typeof paver.settings.tiltSmoothingFunction === 'function') {
+								// Make call to custom smoothing function
+								var customPos = paver.settings.mouseSmoothingFunction.call(paver, screenTilt.gamma, tiltThreshold, screenTilt.beta, tiltThreshold);
+
+								// Sanity check
+								if(customPos !== undefined) {
+									// Set transform
+									paver.pan({
+										xPos: customPos.x,
+										yPos: customPos.y
+									});
+								} else {
+									_fun.defaultSmooth(paver, paver.settings.tiltSmoothingFunction, screenTilt.gamma, tiltThreshold, screenTilt.beta,tiltThreshold);
+								};
+							}
+							
 
 							// Store current tilt
 							paver.instanceData.prevTilt = {
@@ -636,9 +673,20 @@
 							};
 						}
 					}
-
-					
 				}));
+			},
+			// The default smoothing function
+			// 1. Used for default smoothing
+			// 2. Used for custom smoothing if smoothing function is a user-supplied function
+			defaultSmooth: function(paver, smoothingFunction, deltaX, thresholdX, deltaY, thresholdY) {
+				// Get smoothing function for tilting
+				var smooth = _fun.smoothingFunction[smoothingFunction];
+
+				// Set transform
+				paver.pan({
+					xPos: smooth(deltaX, thresholdY),
+					yPos: smooth(deltaY, thresholdY)
+				});
 			}
 		};
 
