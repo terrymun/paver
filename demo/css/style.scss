@@ -49,31 +49,16 @@ body {
 
 /* Header */
 header {
-	background-image: linear-gradient(-45deg, rgba(#2F343B,1) 0%, rgba(#7E827A,1) 100%);
+	background-color: #eee;
 	box-sizing: border-box;
-	color: #fff;
+	color: #333;
 	margin-bottom: 1.5rem;
 	overflow: hidden;
-	padding: 5rem 16.66667% 0;
+	padding: 3rem 16.66667% 0;
 	position: relative;
 	width: 100%;
 	transition: all .25s ease-in-out;
 
-	&::after {
-		background-image:
-			linear-gradient(115deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,.05) 50%, rgba(255,255,255,0) 50%);
-		content: "";
-		opacity: 0;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		transition: all .25s ease-in-out;
-	}
-	&:hover::after {
-		opacity: 1;
-	}
 	& > * {
 		position: relative;
 		z-index: 3;
@@ -81,18 +66,31 @@ header {
 
 	h1 {
 		font-weight: bold;
-		font-size: 4rem;
-		line-height: 1em;
-		margin: 0 0 .5rem 0;
+		margin: 0;
 		a {
 			border: none;
-			color: #eee;
-			transition: all .25s ease-in-out;
-			&:hover { color: $lightOlive; }
+			svg {
+				display: block;
+				margin: 0 auto;
+				width: 75%;
+				height: 75%;
+				#background {
+					fill: #444;
+					transition: all .25s ease-in-out;
+				}
+			}
+		}
+	}
+
+	&:hover {
+		#background {
+			fill: darken($darkOlive, 10%);
 		}
 	}
 	.byline {
 		display: block;
+		margin-top: 1rem;
+		text-align: center;
 	}
 }
 
@@ -274,7 +272,7 @@ aside + pre[class*='language-'] {
 
 /* Navigation Menu */
 header > nav {
-	margin: 3.5rem 0 0;
+	margin: 3rem 0 0;
 	ul {
 		display: flex;
 		align-items: stretch;
@@ -286,7 +284,7 @@ header > nav {
 			flex: 1 0 auto;
 			a {
 				border: none;
-				color: #eee;
+				color: #333;
 				display: block;
 				font-size: .75rem;
 				font-weight: bold;
@@ -296,8 +294,8 @@ header > nav {
 				text-align: center;
 				letter-spacing: 1px;
 				&:hover {
-					background-color: rgba(#000,.25);
-					color: $lightOlive;
+					background-color: $darkOlive;
+					color: #eee;
 				}
 			}
 			&.active a {

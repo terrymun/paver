@@ -37,43 +37,37 @@ body {
 
 /* Header */
 header {
-  background-image: linear-gradient(-45deg, #2f343b 0%, #7e827a 100%);
+  background-color: #eee;
   box-sizing: border-box;
-  color: #fff;
+  color: #333;
   margin-bottom: 1.5rem;
   overflow: hidden;
-  padding: 5rem 16.66667% 0;
+  padding: 3rem 16.66667% 0;
   position: relative;
   width: 100%;
   transition: all .25s ease-in-out; }
-  header::after {
-    background-image: linear-gradient(115deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 50%);
-    content: "";
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transition: all .25s ease-in-out; }
-  header:hover::after {
-    opacity: 1; }
   header > * {
     position: relative;
     z-index: 3; }
   header h1 {
     font-weight: bold;
-    font-size: 4rem;
-    line-height: 1em;
-    margin: 0 0 .5rem 0; }
+    margin: 0; }
     header h1 a {
-      border: none;
-      color: #eee;
-      transition: all .25s ease-in-out; }
-      header h1 a:hover {
-        color: #8CB8B6; }
+      border: none; }
+      header h1 a svg {
+        display: block;
+        margin: 0 auto;
+        width: 75%;
+        height: 75%; }
+        header h1 a svg #background {
+          fill: #444;
+          transition: all .25s ease-in-out; }
+  header:hover #background {
+    fill: #295d58; }
   header .byline {
-    display: block; }
+    display: block;
+    margin-top: 1rem;
+    text-align: center; }
 
 /* Content Styles */
 h1, h2, h3, h4, h5, h6 {
@@ -247,7 +241,7 @@ aside + pre[class*='language-'] {
 
 /* Navigation Menu */
 header > nav {
-  margin: 3.5rem 0 0; }
+  margin: 3rem 0 0; }
   header > nav ul {
     display: flex;
     align-items: stretch;
@@ -259,7 +253,7 @@ header > nav {
       flex: 1 0 auto; }
       header > nav ul li a {
         border: none;
-        color: #eee;
+        color: #333;
         display: block;
         font-size: .75rem;
         font-weight: bold;
@@ -269,8 +263,8 @@ header > nav {
         text-align: center;
         letter-spacing: 1px; }
         header > nav ul li a:hover {
-          background-color: rgba(0, 0, 0, 0.25);
-          color: #8CB8B6; }
+          background-color: #398079;
+          color: #eee; }
       header > nav ul li.active a {
         background-color: #fff;
         color: #333; }

@@ -1,4 +1,5 @@
-# Paver
+![Paver](https://terrymun.github.io/paver/demo/images/paver-logo.png)
+
 [![Build Status](https://travis-ci.org/terrymun/paver.svg?branch=master)](https://travis-ci.org/terrymun/paver) ![Latest Github release](https://img.shields.io/github/release/terrymun/paver.svg?style=flat)
 
 ![Paver Demo](http://terrymun.github.io/paver/demo/images/paver-demo.gif)
