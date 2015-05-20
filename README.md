@@ -1,4 +1,4 @@
-![Paver](https://terrymun.github.io/paver/demo/images/paver-logo.png)
+[![Paver](https://terrymun.github.io/paver/demo/images/paver-logo.png)](http://terrymun.github.io/paver/)
 
 Replicating the photo viewer/panner seen on the experimental Facebook Pages app, **Paver** is a jQuery-powered plugin that enables easy viewing of wide/panoramic images. [View demo here](http://terrymun.github.io/paver/).
 
