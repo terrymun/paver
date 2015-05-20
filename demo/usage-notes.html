@@ -198,6 +198,11 @@
 							$$\textrm{where } x = [-1,1] \textrm{ and } f(x) = [0,1]$$
 						</div>
 					</div>
+					<pre class="language-javascript"><code>var linear = function(delta, threshold) {
+	if (delta &gt;= threshold) return 1;
+	if (delta &lt;= -threshold) return 0;
+	return 0.5 * (delta/threshold + 1);
+};</code></pre>
 					<p>The simplest of all, this function simply transforms $x$ linearly, from its original range of $[-1,1]$, to $f(x)$ with a range of $[0,1]$. This is the default smoothing function (a misnomer, actually, since it is not smoothing anything) for cursor position.</p>
 				</li>
 				<li>
@@ -213,6 +218,11 @@
 							$$\textrm{where } x = [-1,1] \textrm{ and } f(x) = [0,1]$$
 						</div>
 					</div>
+					<pre class="language-javascript"><code>var tangent = function(delta, threshold) {
+	if (delta &gt;= threshold) return 1;
+	if (delta &lt;= -threshold) return 0;
+	return 0.5 * (0.5 * Math.tan((delta/threshold) * (Math.PI * 0.351)) + 1);
+};</code></pre>
 					<p>This function transforms $x$ in the range of $[-1,1]$ via a tangent function. Since the transformation of the tangent curve is imprecise and only down to three decimal places, the range of $f(x)$ lies <em>approximately</em> between $[0,1]$.</p>
 				</li>
 				<li>
@@ -228,6 +238,11 @@
 						$$\textrm{where } x = [-1,1] \textrm{ and } f(x) = [0,1]$$
 						</div>
 					</div>
+					<pre class="language-javascript"><code>var cosine: function(delta, threshold) {
+	if (delta &gt;= threshold) return 1;
+	if (delta &lt;= -threshold) return 0;
+	return 0.5 * (Math.sin((delta/threshold) * (Math.PI/2)) + 1);
+};</code></pre>
 					<p>This function transforms $x$ in the range of $[-1,1]$ via a cosine function. The output, $f(x)$, again lies in the range of $[0,1]$.</p>
 					</div>
 				</li>
@@ -251,6 +266,25 @@
 						$$
 						</div>
 					</div>
+					<pre class="language-javascript"><code>var normalcdf = function(mean, sigma, to) {
+	var z = (to-mean)/Math.sqrt(2*sigma*sigma),
+		t = 1/(1+0.3275911*Math.abs(z)),
+		a1 =  0.254829592,
+		a2 = -0.284496736,
+		a3 =  1.421413741,
+		a4 = -1.453152027,
+		a5 =  1.061405429,
+		erf = 1-(((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-z*z),
+		sign = 1;
+	if(z &lt; 0) sign = -1;
+	return (1/2)*(1+sign*erf);
+};
+
+var gaussian = function(delta, threshold) {
+	if (delta &gt;= threshold) return 1;
+	if (delta &lt;= -threshold) return 0;
+	return normalcdf(0, 0.375, delta/threshold);
+}</code></pre>
 					<p>This function is a simplified equation of the cumulative distribution function of a normal distribution. This is the default smoothing function for device tilt angles, provided by the gyroscope (if present). Note that since the error function $\textrm{erf}()$ is <a href="http://en.wikipedia.org/wiki/Normal_distribution#Numerical_approximations_for_the_normal_CDF" title="Normal distribution - Wikipedia">simply an approximation</a> (code adapted from a <a href="http://stackoverflow.com/a/14873282/395910" title="std normal cdf, normal cdf, or error function">StackOverflow answer</a>), the range of $f(x)$ will only be accurate to at most 9 decimal points (which is more than sufficient, anyway).</p>
 					</p>
 				</li>
