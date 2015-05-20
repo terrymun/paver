@@ -1,6 +1,6 @@
 // Paver
 // Description: A minimal panorama/image viewer replicating the effect seen in Facebook Pages app
-// Version: 1.2.0
+// Version: 1.2.1
 // Author: Terry Mun
 // Author URI: http://terrymun.com
 ;(function ( $, window, document, undefined ) {
@@ -248,6 +248,7 @@
 
 				// Check overflow
 				if(_fun.checkOverflow(this)) {
+					console.log(paver.instanceData.lastPanX)
 					// Pan to last known position
 					paver.pan({
 						xPos: Math.min(paver.instanceData.lastPanX,1),
@@ -328,8 +329,8 @@
 
 				// Update counter and last panned position
 				paver.instanceData.panCounter += 1;
-				paver.instanceData.lastPanX = parseInt(rX);
-				paver.instanceData.lastPanY = parseInt(rY);
+				paver.instanceData.lastPanX = rX;
+				paver.instanceData.lastPanY = rY;
 			}
 		});
 
@@ -684,7 +685,7 @@
 
 				// Set transform
 				paver.pan({
-					xPos: smooth(deltaX, thresholdY),
+					xPos: smooth(deltaX, thresholdX),
 					yPos: smooth(deltaY, thresholdY)
 				});
 			}
