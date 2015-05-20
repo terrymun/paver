@@ -98,6 +98,13 @@
 						<td>200</td>
 						<td><p>The excess width the panorama must have, in pixels, before Paver kicks in. In other words, this option allows the panorama's computed width to exceed that of its parent container by <code>n</code> amount of pixels before we allow for panning. Nobody wants a panorama that can barely be panned, which could almost fit in the whole screen, right?</p><p>This value should be determined on a case-by-case basis, depending on how wide your panorama container is, but with repeated testing I find <code>200</code> to be a good in-between value.</p></td>
 					</tr>
+					<tr id="config__mouse-smoothing-function">
+						<th>mouseSmoothingFunction</th>
+						<td>data-mouse-smoothing-function</td>
+						<td>String or Function</td>
+						<td>linear</td>
+						<td><p>Determines how tilting movement can be translated and smoothed into a panning action. Default option is <code><a href="#smoothing-function__linear">linear</a></code>, but you may choose between <code><a href="#smoothing-function__gaussian">gaussian</a></code>, <code><a href="#smoothing-function__cosine">cosine</a></code> and <code><a href="#smoothing-function__tangent">tangent</a></code>. For details of each smoothing function, refer to <a href="#smoothing-functions" title="Smoothing Functions">smoothing functions</a>.</p><p>If you are declaring a function, refer to <a href="advanced-usage.html#custom-smoothing-functions">custom smoothing functions</a> for instructions on how to create one yourself.</p></td>
+					</tr>
 					<tr id="config__panning-throttle">
 						<th>panningThrottle</th>
 						<td>data-panning-throttle</td>
@@ -112,13 +119,6 @@
 						<td>Numeric (ms)</td>
 						<td>500</td>
 						<td><p>Governs how often the window <code>resize</code> event should be fired. Due to intensive computation requirements of each Paver instance, the window resize event has been highly throttled. Afterall, it is the <em>final</em> dimensions of the viewport that matters, not that of during transitional resizing events.</p></td>
-					</tr>
-					<tr id="config__mouse-smoothing-function">
-						<th>mouseSmoothingFunction</th>
-						<td>data-mouse-smoothing-function</td>
-						<td>String or Function</td>
-						<td>linear</td>
-						<td><p>Determines how tilting movement can be translated and smoothed into a panning action. Default option is <code>linear</code>, but you may choose between <code>gaussian</code>, <code>cosine</code> and <code>tangent</code>. For details of each smoothing function, refer to <a href="#smoothing-functions" title="Smoothing Functions">smoothing functions</a>.</p><p>If you are declaring a function, refer to <a href="advanced-usage.html#custom-smoothing-functions">custom smoothing functions</a> for instructions on how to create one yourself.</p></td>
 					</tr>
 					<tr id="config__responsive">
 						<th>responsive</th>
@@ -161,7 +161,7 @@
 						<td>data-tilt-smoothing-function</td>
 						<td>String or Function</td>
 						<td>gaussian</td>
-						<td><p class="user-message reminder"><strong>Experimental feature that depends on device support.</strong></p><p>Determines how tilting movement can be translated and smoothed into a panning action. Default option is <code>gaussian</code>, but you may choose between <code>linear</code>, <code>cosine</code> and <code>tangent</code>. For details of each smoothing function, refer to <a href="#smoothing-functions" title="Smoothing Functions">smoothing functions</a>.</p><p>If you are declaring a function, refer to <a href="advanced-usage.html#custom-smoothing-functions">custom smoothing functions</a> for instructions on how to create one yourself.</p></td>
+						<td><p class="user-message reminder"><strong>Experimental feature that depends on device support.</strong></p><p>Determines how tilting movement can be translated and smoothed into a panning action. Default option is <code><a href="#smoothing-function__gaussian">gaussian</a></code>, but you may choose between <code><a href="#smoothing-function__linear">linear</a></code>, <code><a href="#smoothing-function__cosine">cosine</a></code> and <code><a href="#smoothing-function__tangent">tangent</a></code>. For details of each smoothing function, refer to <a href="#smoothing-functions" title="Smoothing Functions">smoothing functions</a>.</p><p>If you are declaring a function, refer to <a href="advanced-usage.html#custom-smoothing-functions">custom smoothing functions</a> for instructions on how to create one yourself.</p></td>
 					</tr>
 					<tr id="config__tilt-threshold-landscape">
 						<th>tiltThresholdLandscape</th>
@@ -186,9 +186,9 @@
 			<p>Note: in mathematical terms, square brackets is the representation of the concept "<em>inclusive of</em>", i.e. $[-1,1]$ is inclusive of $-1$ and $1$, or $-1 \le n \le 1$.</p>
 			<ul id="smoothing-functions__list">
 				<li>
-					<h4>Linear</h4>
+					<h4 id="smoothing-function__linear">Linear</h4>
 					<div class="graph">
-						<div class="graph-plot" id="smoothing-function__linear"></div>
+						<div class="graph-plot" id="smoothing-function-plot__linear"></div>
 						<div class="graph-equation">
 							$$
 							\begin{align}
@@ -206,9 +206,9 @@
 					<p>The simplest of all, this function simply transforms $x$ linearly, from its original range of $[-1,1]$, to $f(x)$ with a range of $[0,1]$. This is the default smoothing function (a misnomer, actually, since it is not smoothing anything) for cursor position.</p>
 				</li>
 				<li>
-					<h4>Tangent</h4>
+					<h4 id="smoothing-function__tangent">Tangent</h4>
 					<div class="graph">
-						<div class="graph-plot" id="smoothing-function__tangent"></div>
+						<div class="graph-plot" id="smoothing-function-plot__tangent"></div>
 						<div class="graph-equation">
 							$$
 							\begin{align}
@@ -226,9 +226,9 @@
 					<p>This function transforms $x$ in the range of $[-1,1]$ via a tangent function. Since the transformation of the tangent curve is imprecise and only down to three decimal places, the range of $f(x)$ lies <em>approximately</em> between $[0,1]$.</p>
 				</li>
 				<li>
-					<h4>Cosine</h4>
+					<h4 id="smoothing-function__cosine">Cosine</h4>
 					<div class="graph">
-						<div class="graph-plot" id="smoothing-function__cosine"></div>
+						<div class="graph-plot" id="smoothing-function-plot__cosine"></div>
 						<div class="graph-equation">
 						$$
 						\begin{align}
@@ -247,9 +247,9 @@
 					</div>
 				</li>
 				<li>
-					<h4>Gaussian</h4>
+					<h4 id="smoothing-function__gaussian">Gaussian</h4>
 					<div class="graph">
-						<div class="graph-plot" id="smoothing-function__gaussian"></div>
+						<div class="graph-plot" id="smoothing-function-plot__gaussian"></div>
 						<div class="graph-equation">
 						$$
 						\begin{align}
@@ -379,7 +379,7 @@ var gaussian = function(delta, threshold) {
 						.y(function(d) { return y(parseFloat(d.y)); });
 
 					// Graph
-					var graph = d3.select('#smoothing-function__'+graph.id)
+					var graph = d3.select('#smoothing-function-plot__'+graph.id)
 						.append('svg:svg')
 							.attr({
 								'width': w + m[1] + m[3],
