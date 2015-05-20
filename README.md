@@ -1,10 +1,11 @@
 ![Paver](https://terrymun.github.io/paver/demo/images/paver-logo.png)
 
+Replicating the photo viewer/panner seen on the experimental Facebook Pages app, **Paver** is a jQuery-powered plugin that enables easy viewing of wide/panoramic images. [View demo here](http://terrymun.github.io/paver/).
+
 [![Build Status](https://travis-ci.org/terrymun/paver.svg?branch=master)](https://travis-ci.org/terrymun/paver) ![Latest Github release](https://img.shields.io/github/release/terrymun/paver.svg?style=flat)
 
+Here is a gif showing how Paver should work:
 ![Paver Demo](http://terrymun.github.io/paver/demo/images/paver-demo.gif)
-
-Replicating the photo viewer/panner seen on the experimental Facebook Pages app. [View demo here](http://terrymun.github.io/paver/).
 
 Paver had been tested in the latest versions of Chrome, Firefox, Safari and iOS Safari.
 
