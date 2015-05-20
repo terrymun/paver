@@ -889,7 +889,7 @@ footer {
 	#configuration-options__table {
 		tbody {
 			th::before					{ content: 'Option'; }
-			td:nth-of-type(1)::before	{ content: 'HTML5 data'; }
+			td:nth-of-type(1)::before	{ content: 'HTML5'; }
 			td:nth-of-type(2)::before	{ content: 'Type'; }
 			td:nth-of-type(3)::before	{ content: 'Default'; }
 			td:nth-of-type(4)::before	{ content: 'Description'; }
@@ -897,7 +897,7 @@ footer {
 	}
 	#custom-triggers__table {
 		tbody {
-			th::before					{ content: 'Function name'; }
+			th::before					{ content: 'Function'; }
 			td:nth-of-type(1)::before	{ content: 'Arguments'; }
 			td:nth-of-type(2)::before	{ content: 'Description'; }
 		}
