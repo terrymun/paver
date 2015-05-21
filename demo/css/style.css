@@ -53,22 +53,57 @@ header {
     font-weight: bold;
     margin: 0; }
     header h1 a {
-      border: none; }
+      border: none;
+      display: block;
+      position: relative; }
       header h1 a svg {
         display: block;
         margin: 0 auto;
         width: 75%;
         height: 75%; }
         header h1 a svg #background {
-          fill: #444;
+          fill: #ccc;
           transition: all .25s ease-in-out; }
+        header h1 a svg path.logo-scroller {
+          fill: none;
+          stroke-width: 10;
+          stroke-linecap: round;
+          stroke-miterlimit: 10;
+          transition: all .25s ease-in-out; }
+          header h1 a svg path.logo-scroller#logo-scroller-track {
+            stroke: #eee; }
+          header h1 a svg path.logo-scroller#logo-scroller-handler {
+            stroke: #333;
+            stroke-dasharray: 150,900;
+            stroke-dashoffset: -210; }
+        header h1 a svg text {
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+          header h1 a svg text tspan:first-child {
+            fill: #333;
+            transition: all .25s ease-in-out; }
+          header h1 a svg text tspan:last-child {
+            fill: rgba(0, 0, 0, 0.4); }
   header:hover #background {
-    fill: #295d58; }
+    fill: #accbca; }
+  header.hover h1 a svg path.logo-scroller#logo-scroller-handler {
+    animation: handlerTween 2s ease-in-out;
+    stroke: #398079; }
+  header.hover h1 a svg text tspan:first-child {
+    fill: #398079; }
   header .byline {
     display: block;
     margin-top: 1rem;
     text-align: center; }
 
+@keyframes handlerTween {
+  0% {
+    stroke-dashoffset: -210; }
+  25% {
+    stroke-dashoffset: -619; }
+  65% {
+    stroke-dashoffset: 0; }
+  100% {
+    stroke-dashoffset: -210; } }
 /* Content Styles */
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;

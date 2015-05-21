@@ -1,6 +1,7 @@
 /* Variables */
 $lightOlive: #8CB8B6;
 $darkOlive: #398079;
+$sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 /* Component styles */
 @font-face {
@@ -38,7 +39,7 @@ $darkOlive: #398079;
 
 /* General */
 html {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: $sans-serif;
 	font-size: 20px;
 }
 body {
@@ -69,14 +70,41 @@ header {
 		margin: 0;
 		a {
 			border: none;
+			display: block;
+			position: relative;
 			svg {
 				display: block;
 				margin: 0 auto;
 				width: 75%;
 				height: 75%;
 				#background {
-					fill: #444;
+					fill: #ccc;
 					transition: all .25s ease-in-out;
+				}
+				path.logo-scroller {
+					fill: none;
+					stroke-width: 10;
+					stroke-linecap: round;
+					stroke-miterlimit: 10;
+					transition: all .25s ease-in-out;
+					&#logo-scroller-track {
+						stroke: #eee;			
+					}
+					&#logo-scroller-handler {
+						stroke: #333;
+						stroke-dasharray: 150,900;
+						stroke-dashoffset: -210; 
+					}
+				}
+				text {
+					font-family: $sans-serif;
+					tspan:first-child {
+						fill: #333;
+						transition: all .25s ease-in-out;
+					}
+					tspan:last-child {
+						fill: rgba(#000, .4);
+					}
 				}
 			}
 		}
@@ -84,13 +112,40 @@ header {
 
 	&:hover {
 		#background {
-			fill: darken($darkOlive, 10%);
+			fill: lighten($lightOlive, 10%);
+		}
+	}
+	&.hover {
+		h1 a svg {
+			path.logo-scroller {
+				&#logo-scroller-handler {
+					animation: handlerTween 2s ease-in-out;
+					stroke: $darkOlive;
+				}
+			}
+			text tspan:first-child {
+				fill: $darkOlive;
+			}
 		}
 	}
 	.byline {
 		display: block;
 		margin-top: 1rem;
 		text-align: center;
+	}
+}
+@keyframes handlerTween {
+	0% {
+		stroke-dashoffset: -210;
+	}
+	25% {
+		stroke-dashoffset: -619;
+	}
+	65% {
+		stroke-dashoffset: 0;
+	}
+	100% {
+		stroke-dashoffset: -210;
 	}
 }
 
@@ -173,7 +228,7 @@ pre[class*=language-] {
 	}
 	pre[class*=language-] > code[data-language]::before {
 		border-radius: 0;
-		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-family: $sans-serif;
 		font-size: .6rem;
 		letter-spacing: 1px;
 		opacity: 0;
