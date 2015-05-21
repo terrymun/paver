@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" media="all" rel="stylesheet" />
-	<link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700|PT+Serif:400italic" rel="stylesheet" type="text/css">
+	<link href="//fonts.googleapis.com/css?family=PT+Serif:400italic" rel="stylesheet" type="text/css">
 	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" media="all" rel="stylesheet" />
 	<link rel="stylesheet" href="./css/style.css" />
 	<link rel="stylesheet" href="../css/paver.css" />
@@ -44,7 +44,7 @@
 								</g>
 							</g>
 							<rect x="20.21" y="118.852" fill="none" width="875" height="183.95"/>
-							<text transform="matrix(1 0 0 1 266.9116 221.6665)"><tspan x="0" y="0" fill="#8DB8B7" font-family="'HelveticaNeue-Medium'" font-size="144">Pa</tspan><tspan x="176.111" y="0" fill="#EEEEEE" font-family="'HelveticaNeue-Medium'" font-size="144">ver</tspan></text>
+							<text transform="matrix(1 0 0 1 266.9116 221.6665)"><tspan x="0" y="0" fill="#8DB8B7" font-family="Helvetica, Arial" font-size="144">Pa</tspan><tspan x="176.111" y="0" fill="#EEEEEE" font-family="Helvetica, Arial" font-size="144">ver</tspan></text>
 						</g>
 					</svg>
 				</a>
@@ -159,10 +159,11 @@ $('#paver-toggle').change(function() {
 		<h2 id="custom-smoothing-functions">Custom smoothing functions</h2>
 		<p>Paver also allows you to declare your own smoothing function. Note that when using your custom smoothing function, it has to accept four arguments: <code>deltaX</code>, <code>thresholdX</code>, <code>deltaY</code>, <code>thresholdY</code>. The <code>deltaX</code> and <code>deltaY</code> arguments refer to the absolute change from the center/resting position of the device, in the units of pixels (when listening to <code>mousemove</code> events) or in the units of angle (when listening to <code>deviceorientation</code> events). You may of course rename these arguments into a variable name that you can understand better.</p>
 		<p>The ratios of <code>deltaX / thresholdX</code> and <code>deltaY / thresholdY</code> will fall in the range of $[-1,1]$. Your custom function should return transformed $x$ and $y$ coordinates that must fall within the range of $[0,1]$, in the format of the object: <code>{x: mappedX; y: mappedY}</code>. For the reasonning behind the need to map from one range to another, and the mathematical basis behind it, please refer to the <a href="usage-notes.html#smoothing-functions" title="Usage Notes&mdash;Smoothing Functions">documentation on smoothing functions</a>.</p>
+		<p class="user-message reminder">So far Paver only supports horizontal panoramas. Even though changes in the y-axis are recorded by the plugin, they are not utilized as of v1.2.0. Future support for vertical or bidirectional panoramas is in the works.</p>
 		<pre class="language-javascript"><code>function(deltaX, thresholdX, deltaY, thresholdY) {
 	// Define transformations, and map them to new range
 	// Convert deltaX/thresholdX and map it to mappedX
-	// Convert deltaY/thresholdY and mpa it to mappedY
+	// Convert deltaY/thresholdY and map it to mappedY
 
     // Return the transformed x and y coordinates
 	return {
@@ -175,7 +176,7 @@ $('#paver-toggle').change(function() {
     mouseSmoothingFunction: 'linear',
     tiltSmoothingFunction:  'gaussian'
 });</code></pre>
-		<p>&hellip;we pass them as a function (see below). For a bulletproof setup, Paver will fallback to the default smoothing function if the custom smoothing function returns an error.</p>
+		<p>&hellip;we pass them as a function (see below). For a bulletproof setup, Paver will fallback to the default smoothing function if the custom smoothing function returns an error. It is important to coerce the maximum and minimum values within the range of $[0,1]$ manually in the event that the <code>delta</code> value(s) exceed those of <code>threshold</code>.</p>
 		<pre class="language-javascript"><code>$(selector).paver({
 // Here I use the recommended argument names for x and y axis changes
 mouseSmoothingFunction: function(deltaX, thresholdX, deltaY, thresholdY) {
@@ -183,12 +184,12 @@ mouseSmoothingFunction: function(deltaX, thresholdX, deltaY, thresholdY) {
 	var x, y;
 
 	// Reverse linear transformation
-	if(deltaX >= thresholdX) x = 1;     // Remember to perform sanity checks by yourself
-	if(deltaX <= thresholdX) x = 0;     // Remember to perform sanity checks by yourself
+	if(deltaX >= thresholdX) x = 1;     // Remember to manually coerce maximum and minimum values
+	if(deltaX <= thresholdX) x = 0;     // Remember to manually coerce maximum and minimum values
 	x = 0.5 * (-deltaX/thresholdX + 1); // Map from [-1,1] to [0,1]
 
-	if(deltaY >= thresholdY) y = 1;     // Remember to perform sanity checks by yourself
-	if(deltaY <= thresholdY) y = 0;     // Remember to perform sanity checks by yourself
+	if(deltaY >= thresholdY) y = 1;     // Remember to manually coerce maximum and minimum values
+	if(deltaY <= thresholdY) y = 0;     // Remember to manually coerce maximum and minimum values
 	y = 0.5 * (-deltaY/thresholdY + 1); // Map from [-1,1] to [0,1]
 
 	return {
@@ -201,16 +202,16 @@ tiltSmoothingFunction: function(deltaLR, thresholdLR, deltaFB, thresholdFB) {
 	// Left-right and forward-backward
 	var lr, fb;
 
-	if(deltaLR >= thresholdLR) lr = 1;     // Remember to perform sanity checks by yourself
-	if(deltaLR <= thresholdLR) lr = 0;     // Remember to perform sanity checks by yourself
+	if(deltaLR >= thresholdLR) lr = 1;     // Remember to manually coerce maximum and minimum values
+	if(deltaLR <= thresholdLR) lr = 0;     // Remember to manually coerce maximum and minimum values
 	lr = 0.5 * (-deltaLR/thresholdLR + 1); // Map from [-1,1] to [0,1]
 
-	if(deltaFB >= thresholdFB) fb = 1;     // Remember to perform sanity checks by yourself
-	if(deltaFB <= thresholdFB) fb = 0;     // Remember to perform sanity checks by yourself
+	if(deltaFB >= thresholdFB) fb = 1;     // Remember to manually coerce maximum and minimum values
+	if(deltaFB <= thresholdFB) fb = 0;     // Remember to manually coerce maximum and minimum values
 	fb = 0.5 * (-deltaFB/thresholdFB + 1); // Map from [-1,1] to [0,1]
 
 	return {
-		lr: lr,
+		x: lr,
 		y: fb
 	}
 });</code></pre>

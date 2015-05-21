@@ -44,7 +44,7 @@ html {
 body {
 	color: #333;
 	height: 100%;
-	line-height: 1.5em;
+	line-height: 1.75em;
 }
 
 /* Header */
@@ -114,12 +114,12 @@ h4 {
 	margin: 2.25rem 0 .25rem 0;
 }
 a {
-	border-bottom: 2px solid rgba($darkOlive, .5);
+	border-bottom: 2px solid rgba($lightOlive, .5);
 	color: $darkOlive;
 	text-decoration: none;
 	transition: all .125s ease-in-out;
 	&:hover {
-		border-bottom-color: $darkOlive;
+		border-bottom-color: $lightOlive;
 	}
 	&.anchor {
 		border: none;
@@ -480,8 +480,7 @@ main {
 					color: #999;
 					display: block;
 					font-size: 1.2rem;
-					width: 350px;
-					height: 350px;
+					width: 480px;
 					path {
 						stroke: $lightOlive;
 						stroke-width: 10;
@@ -502,7 +501,7 @@ main {
 					.axis {
 						shape-rendering: crispEdges;
 						line, path {
-							stroke: #ccc;
+							stroke: #aaa;
 							stroke-width: 5;
 						}
 					}
@@ -676,6 +675,7 @@ form {
 		border-radius: 50%;
 		content: '';
 		display: block;
+		box-shadow: 0 2px 8px 0 rgba(#000, .25);
 		height: calc(1.5rem - 4px);
 		left: 0;
 		position: absolute;
@@ -767,7 +767,7 @@ footer {
 }
 
 /* Media queries, unrelated to functionality of Fluidbox */
-@media only screen and (max-width: 979px) {
+@media only screen and (max-width: 1279px) {
 	/* Smoothing Functions */
 	#smoothing-functions__list {
 		li {
@@ -776,9 +776,10 @@ footer {
 				div.graph-plot {
 					flex-basis: 100%;
 					svg {
+						font-size: 1.2rem;
 						margin: 0 auto;
-						width: 300px;
-						height: 300px;
+						width: 100%;
+						height: auto;
 					}
 				}
 				.graph-equation {
@@ -787,7 +788,8 @@ footer {
 			}
 		}
 	}
-
+}
+@media only screen and (max-width: 979px) {
 	/* Features */
 	#features + ul {
 		display: block;
@@ -920,6 +922,19 @@ footer {
 					&:first-child { display: none; }
 					&.active a {
 						background-color: rgba(#fff,.75);
+					}
+				}
+			}
+		}
+	}
+
+	/* Smoothing Functions */
+	#smoothing-functions__list {
+		li {
+			& > div.graph {
+				div.graph-plot {
+					svg {
+						font-size: 1.5rem;
 					}
 				}
 			}

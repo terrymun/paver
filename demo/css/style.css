@@ -33,7 +33,7 @@ html {
 body {
   color: #333;
   height: 100%;
-  line-height: 1.5em; }
+  line-height: 1.75em; }
 
 /* Header */
 header {
@@ -89,12 +89,12 @@ h4 {
   margin: 2.25rem 0 .25rem 0; }
 
 a {
-  border-bottom: 2px solid rgba(57, 128, 121, 0.5);
+  border-bottom: 2px solid rgba(140, 184, 182, 0.5);
   color: #398079;
   text-decoration: none;
   transition: all .125s ease-in-out; }
   a:hover {
-    border-bottom-color: #398079; }
+    border-bottom-color: #8CB8B6; }
   a.anchor {
     border: none;
     font-size: 1.5rem;
@@ -414,8 +414,7 @@ main {
           color: #999;
           display: block;
           font-size: 1.2rem;
-          width: 350px;
-          height: 350px; }
+          width: 480px; }
           #smoothing-functions__list li > div.graph div.graph-plot svg path {
             stroke: #8CB8B6;
             stroke-width: 10;
@@ -432,7 +431,7 @@ main {
           #smoothing-functions__list li > div.graph div.graph-plot svg .axis {
             shape-rendering: crispEdges; }
             #smoothing-functions__list li > div.graph div.graph-plot svg .axis line, #smoothing-functions__list li > div.graph div.graph-plot svg .axis path {
-              stroke: #ccc;
+              stroke: #aaa;
               stroke-width: 5; }
       #smoothing-functions__list li > div.graph .graph-equation {
         flex-basis: auto;
@@ -570,6 +569,7 @@ form {
     border-radius: 50%;
     content: '';
     display: block;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
     height: calc(1.5rem - 4px);
     left: 0;
     position: absolute;
@@ -643,19 +643,20 @@ footer {
     opacity: 1; }
 
 /* Media queries, unrelated to functionality of Fluidbox */
-@media only screen and (max-width: 979px) {
+@media only screen and (max-width: 1279px) {
   /* Smoothing Functions */
   #smoothing-functions__list li > div.graph {
     flex-wrap: wrap; }
     #smoothing-functions__list li > div.graph div.graph-plot {
       flex-basis: 100%; }
       #smoothing-functions__list li > div.graph div.graph-plot svg {
+        font-size: 1.2rem;
         margin: 0 auto;
-        width: 300px;
-        height: 300px; }
+        width: 100%;
+        height: auto; }
     #smoothing-functions__list li > div.graph .graph-equation {
-      flex-basis: 100%; }
-
+      flex-basis: 100%; } }
+@media only screen and (max-width: 979px) {
   /* Features */
   #features + ul {
     display: block;
@@ -745,7 +746,7 @@ footer {
   #configuration-options__table tbody th::before {
     content: 'Option'; }
   #configuration-options__table tbody td:nth-of-type(1)::before {
-    content: 'HTML5 data'; }
+    content: 'HTML5'; }
   #configuration-options__table tbody td:nth-of-type(2)::before {
     content: 'Type'; }
   #configuration-options__table tbody td:nth-of-type(3)::before {
@@ -754,7 +755,7 @@ footer {
     content: 'Description'; }
 
   #custom-triggers__table tbody th::before {
-    content: 'Function name'; }
+    content: 'Function'; }
   #custom-triggers__table tbody td:nth-of-type(1)::before {
     content: 'Arguments'; }
   #custom-triggers__table tbody td:nth-of-type(2)::before {
@@ -775,6 +776,10 @@ footer {
     header > nav ul li:first-child {
       display: none; }
     header > nav ul li.active a {
-      background-color: rgba(255, 255, 255, 0.75); } }
+      background-color: rgba(255, 255, 255, 0.75); }
+
+  /* Smoothing Functions */
+  #smoothing-functions__list li > div.graph div.graph-plot svg {
+    font-size: 1.5rem; } }
 
 /*# sourceMappingURL=style.css.map */

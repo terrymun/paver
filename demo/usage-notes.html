@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" media="all" rel="stylesheet" />
-	<link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700|PT+Serif:400italic" rel="stylesheet" type="text/css">
+	<link href="//fonts.googleapis.com/css?family=PT+Serif:400italic" rel="stylesheet" type="text/css">
 	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" media="all" rel="stylesheet" />
 	<link rel="stylesheet" href="./css/style.css" />
 	<link rel="stylesheet" href="../css/paver.css" />
@@ -44,7 +44,7 @@
 								</g>
 							</g>
 							<rect x="20.21" y="118.852" fill="none" width="875" height="183.95"/>
-							<text transform="matrix(1 0 0 1 266.9116 221.6665)"><tspan x="0" y="0" fill="#8DB8B7" font-family="'HelveticaNeue-Medium'" font-size="144">Pa</tspan><tspan x="176.111" y="0" fill="#EEEEEE" font-family="'HelveticaNeue-Medium'" font-size="144">ver</tspan></text>
+							<text transform="matrix(1 0 0 1 266.9116 221.6665)"><tspan x="0" y="0" fill="#8DB8B7" font-family="Helvetica, Arial" font-size="144">Pa</tspan><tspan x="176.111" y="0" fill="#EEEEEE" font-family="Helvetica, Arial" font-size="144">ver</tspan></text>
 						</g>
 					</svg>
 				</a>
@@ -204,7 +204,7 @@
 			</table>
 
 			<h3 id="smoothing-functions">Smoothing Functions</h3>
-			<p class="user-message note">As of v1.2.0, you can now declare your own smoothing functions. Please refer to <a href="advanced-usage.html#custom-smoothing-functions" title="Advanced Usage&mdash;Custom Smoothing Functions">advaned usage for an example</a>.</p>
+			<p class="user-message note">As of v1.2.0, you can now declare your own smoothing functions. Please refer to <a href="advanced-usage.html#custom-smoothing-functions" title="Advanced Usage&mdash;Custom Smoothing Functions">advanced usage for an example</a>.</p>
 			<p>Paver comes with four smoothing functions that converts cursor coordinates and/or device tilt into CSS transforms that will pan your panoramas. Note that these functions accept variables mapped to the range of $[-1,1]$, where 0 represents the center of the panorama, and will transform outputs mapped to the range of $[0,1]$, where 0.5 represents the center of the panorama. The reasoning behind this is that device tilt can take on negative and positive values&mdash;cursor coordinates are simply mapped to $[-1,1]$ prior to passing them into smoothing functions.</p>
 			<p>Note: in mathematical terms, square brackets is the representation of the concept "<em>inclusive of</em>", i.e. $[-1,1]$ is inclusive of $-1$ and $1$, or $-1 \le n \le 1$.</p>
 			<ul id="smoothing-functions__list">
@@ -261,7 +261,7 @@
 						$$\textrm{where } x = [-1,1] \textrm{ and } f(x) = [0,1]$$
 						</div>
 					</div>
-					<pre class="language-javascript"><code>var cosine: function(delta, threshold) {
+					<pre class="language-javascript"><code>var cosine = function(delta, threshold) {
 	if (delta &gt;= threshold) return 1;
 	if (delta &lt;= -threshold) return 0;
 	return 0.5 * (Math.sin((delta/threshold) * (Math.PI/2)) + 1);
@@ -334,7 +334,7 @@ var gaussian = function(delta, threshold) {
 				// Math formulas
 				var smoothingFunction = {
 					linear: function(r) {
-						return 0.5 * (r+1);
+						return 0.5 * (r + 1);
 					},
 					tangent: function(r) {
 						return 0.5 * (0.5*Math.tan(r * (Math.PI*0.351)) + 1);
@@ -358,8 +358,8 @@ var gaussian = function(delta, threshold) {
 				};
 
 				// Graph dimensions
-				var m = [50,50,50,50],	// Margins
-					w = 500 - m[1] - m[3],	// Width
+				var m = [25,25,75,100],	// Margins
+					w = 800 - m[1] - m[3],	// Width
 					h = 500 - m[0] - m[2];	// Height
 
 				// Data points
@@ -383,17 +383,19 @@ var gaussian = function(delta, threshold) {
 
 					for (var k = 0; k < n; k++) {
 						data.push({
-							x: k/n,
-							y: smooth((2*k/n-1))
+							x: (k/n * 2 - 1),
+							y: smooth(k/n * 2 - 1)
 						});
 					}
+
+					console.log(data);
 
 					// Map data
 					var dataX = data.map(function(d,i) { return parseFloat(d.x); }),
 						dataY = data.map(function(d,i) { return parseFloat(d.y); });
 
 					// Scale
-					var x = d3.scale.linear().domain([0, 1]).range([0, w]),
+					var x = d3.scale.linear().domain([-1, 1]).range([0, w]),
 						y = d3.scale.linear().domain([0, 1]).range([h, 0]);
 
 					// Line
@@ -405,57 +407,37 @@ var gaussian = function(delta, threshold) {
 					var graph = d3.select('#smoothing-function-plot__'+graph.id)
 						.append('svg:svg')
 							.attr({
-								'width': w + m[1] + m[3],
-								'height': h + m[0] + m[2],
 								'viewBox': '0 0 ' + (w + m[1] + m[3]) + ' ' + (h + m[0] + m[2]),
 								'preserveAspectRatio': 'xMidYMid meet'
 							})
 						.append('svg:g')
 							.attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
 
-						// Draw grid lines
-						graph
-						.selectAll("line.x.major")
-							.data(x.ticks(4))
-							.enter()
-								.append("line")
-									.attr({
-										'class': 'x major',
-										'x1': x,
-										'x2': x,
-										'y1': 0,
-										'y2': h
-									});
-						graph
-						.selectAll("line.y.major")
-							.data(y.ticks(4))
-							.enter()
-								.append("line")
-									.attr({
-										'class': 'y major',
-										'x1': 0,
-										'x2': w,
-										'y1': y,
-										'y2': y
-									});
-
-					// Create x and y axes
-					var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(2).tickValues([0.5,1]),
-						yAxis = d3.svg.axis().scale(y).orient('left').ticks(2).tickValues([0.5,1]);
-
-					// Add the axes
-					graph.append('svg:g')
-						.attr({
-							'class': 'x axis',
-							'transform': 'translate(0,' + h + ')'
-						})
-						.call(xAxis)
-					.append('svg:g')
-						.attr({
-							'class': 'y axis',
-							'transform': 'translate(0,-' + h + ')'
-						})
-						.call(yAxis);
+					// Draw grid lines
+					graph
+					.selectAll("line.x.major")
+						.data(x.ticks(4))
+						.enter()
+							.append("line")
+								.attr({
+									'class': 'x major',
+									'x1': x,
+									'x2': x,
+									'y1': 0,
+									'y2': h
+								});
+					graph
+					.selectAll("line.y.major")
+						.data(y.ticks(2))
+						.enter()
+							.append("line")
+								.attr({
+									'class': 'y major',
+									'x1': 0,
+									'x2': w,
+									'y1': y,
+									'y2': y
+								});
 
 					// Add middle line
 					graph
@@ -490,6 +472,43 @@ var gaussian = function(delta, threshold) {
 							'cy': 0.5 * (h),
 							'r': 10
 						});
+
+					// Create x and y axes
+					var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(3).tickValues([-1, 0, 1]),
+						yAxis = d3.svg.axis().scale(y).orient('left').ticks(2).tickValues([0.5,1]);
+
+					graph.append('svg:g')
+						.attr({
+							'class': 'x axis',
+							'transform': 'translate(0,' + h + ')'
+						})
+						.call(xAxis)
+					.append('svg:g')
+						.attr({
+							'class': 'y axis',
+							'transform': 'translate(0,-' + h + ')'
+						})
+						.call(yAxis);
+
+					// Add axis labels
+					graph.append('svg:text')
+						.attr({
+							'class': 'x label',
+							'text-anchor': 'middle',
+							'x': 0.5 * w,
+							'y': h + m[2]
+						})
+						.text('\u0394 from center as ratio to threshold');
+					graph.append('svg:text')
+						.attr({
+							'class': 'y label',
+							'text-anchor': 'middle',
+							'x': -0.5 * h,
+							'y': -(0.5 * m[3]) - 10,
+							'transform': 'rotate(-90)'
+						})
+						.text('Output ratio');
+					
 				});
 
 				// Mathjax
