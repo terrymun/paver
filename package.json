@@ -30,7 +30,9 @@
     "node_modules",
     "bower_components",
     "test",
-    "package.json"
+    "package.json",
+    "demo",
+    "src"
   ],
   "dependencies": {
     "jquery": ">=1.9"

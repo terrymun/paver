@@ -32,6 +32,8 @@
         "test",
         "package.json",
         "component.json",
+        "demo",
+        "src"
     ],
     "dependencies": {
         "jquery": ">=1.9"
