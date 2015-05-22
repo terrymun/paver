@@ -83,7 +83,7 @@ header {
             transition: all .25s ease-in-out; }
           header h1 a svg text tspan:last-child {
             fill: rgba(0, 0, 0, 0.4); }
-  header:hover #background {
+  header.hover h1 a svg #background {
     fill: #accbca; }
   header.hover h1 a svg path.logo-scroller#logo-scroller-handler {
     animation: handlerTween 2s ease-in-out;

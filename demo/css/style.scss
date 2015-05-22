@@ -110,13 +110,11 @@ header {
 		}
 	}
 
-	&:hover {
-		#background {
-			fill: lighten($lightOlive, 10%);
-		}
-	}
 	&.hover {
 		h1 a svg {
+			#background {
+				fill: lighten($lightOlive, 10%);
+			}
 			path.logo-scroller {
 				&#logo-scroller-handler {
 					animation: handlerTween 2s ease-in-out;
