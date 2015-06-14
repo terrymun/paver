@@ -1,6 +1,6 @@
 // Paver
 // Description: A minimal panorama/image viewer replicating the effect seen in Facebook Pages app
-// Version: 1.2.1
+// Version: 1.2.3
 // Author: Terry Mun
 // Author URI: http://terrymun.com
 ;(function ( $, window, document, undefined ) {
@@ -248,7 +248,7 @@
 
 				// Check overflow
 				if(_fun.checkOverflow(this)) {
-					console.log(paver.instanceData.lastPanX)
+
 					// Pan to last known position
 					paver.pan({
 						xPos: Math.min(paver.instanceData.lastPanX,1),
@@ -465,7 +465,9 @@
 			},
 			paverOn: function(paver) {
 				// Turn on paver
-				paver.$t.removeClass('paver--off').addClass('paver--on');
+				paver.$t
+				.removeClass('paver--off').addClass('paver--on')
+				.find('div.paver__pano').css('left', 0);	// Unset the 'left: 50%' set for responsive panoramas
 
 				// Bind events
 				_fun.bindEvents(paver);
