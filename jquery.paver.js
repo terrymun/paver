@@ -780,34 +780,6 @@
 				_check.hasGyroscope();
 			}, false);
 
-			// Wait for gyroscopic data
-			$.when(_check.hasGyroscope()).then(function(gyroData) {
-				// We have gyroscopic data!
-				// Do paver
-				global.features.hasGyroscope = true;
-
-				// Establish startTilt
-				global.startTilt.alpha	= gyroData.orientation.alpha;
-				global.startTilt.beta	= gyroData.orientation.beta;
-				global.startTilt.gamma	= gyroData.orientation.gamma;
-
-				// Trigger event
-				$d.trigger('hasGyroscopeData.paver', [gyroData]);
-
-				// Do paver
-				_doPaver.call(t);
-
-			}, function(gyroData) {
-				// We do not have gyroscopic data
-				global.features.hasGyroscope = false;
-
-				// Trigger event
-				$d.trigger('hasNoGyroscopeData.paver', [gyroData]);
-
-				// Do paver
-				_doPaver.call(t);
-			});
-
 			// Paver loop
 			var _doPaver = function() {
 				var $t = $(this);
@@ -858,6 +830,34 @@
 				}
 				
 			};
+
+			// Wait for gyroscopic data
+			$.when(_check.hasGyroscope()).then(function(gyroData) {
+				// We have gyroscopic data!
+				// Do paver
+				global.features.hasGyroscope = true;
+
+				// Establish startTilt
+				global.startTilt.alpha	= gyroData.orientation.alpha;
+				global.startTilt.beta	= gyroData.orientation.beta;
+				global.startTilt.gamma	= gyroData.orientation.gamma;
+
+				// Trigger event
+				$d.trigger('hasGyroscopeData.paver', [gyroData]);
+
+				// Do paver
+				_doPaver.call(t);
+
+			}, function(gyroData) {
+				// We do not have gyroscopic data
+				global.features.hasGyroscope = false;
+
+				// Trigger event
+				$d.trigger('hasNoGyroscopeData.paver', [gyroData]);
+
+				// Do paver
+				_doPaver.call(t);
+			});
 
 			// Return
 			return t;
