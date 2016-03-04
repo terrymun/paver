@@ -1,6 +1,6 @@
 // Paver
 // Description: A minimal panorama/image viewer replicating the effect seen in Facebook Pages app
-// Version: 1.2.1
+// Version: 1.2.3
 // Author: Terry Mun
 // Author URI: http://terrymun.com
 ;(function ( $, window, document, undefined ) {
@@ -248,7 +248,7 @@
 
 				// Check overflow
 				if(_fun.checkOverflow(this)) {
-					console.log(paver.instanceData.lastPanX)
+
 					// Pan to last known position
 					paver.pan({
 						xPos: Math.min(paver.instanceData.lastPanX,1),
@@ -354,15 +354,15 @@
 			//// ------------------ ////
 			// Adapted from http://stackoverflow.com/questions/5259421/cumulative-distribution-function-in-javascript
 			normalcdf: function(mean, sigma, to) {
-				var z = (to-mean)/Math.sqrt(2*sigma*sigma);
-				var t = 1/(1+0.3275911*Math.abs(z));
-				var a1 =  0.254829592;
-				var a2 = -0.284496736;
-				var a3 =  1.421413741;
-				var a4 = -1.453152027;
-				var a5 =  1.061405429;
-				var erf = 1-(((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-z*z);
-				var sign = 1;
+				var z = (to-mean)/Math.sqrt(2*sigma*sigma),
+					t = 1/(1+0.3275911*Math.abs(z)),
+					a1 =  0.254829592,
+					a2 = -0.284496736,
+					a3 =  1.421413741,
+					a4 = -1.453152027,
+					a5 =  1.061405429,
+					erf = 1-(((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-z*z),
+					sign = 1;
 				if(z < 0) sign = -1;
 				return (1/2)*(1+sign*erf);
 			},
@@ -465,7 +465,9 @@
 			},
 			paverOn: function(paver) {
 				// Turn on paver
-				paver.$t.removeClass('paver--off').addClass('paver--on');
+				paver.$t
+				.removeClass('paver--off').addClass('paver--on')
+				.find('div.paver__pano').css('left', 0);	// Unset the 'left: 50%' set for responsive panoramas
 
 				// Bind events
 				_fun.bindEvents(paver);
@@ -780,34 +782,6 @@
 				_check.hasGyroscope();
 			}, false);
 
-			// Wait for gyroscopic data
-			$.when(_check.hasGyroscope()).then(function(gyroData) {
-				// We have gyroscopic data!
-				// Do paver
-				global.features.hasGyroscope = true;
-
-				// Establish startTilt
-				global.startTilt.alpha	= gyroData.orientation.alpha;
-				global.startTilt.beta	= gyroData.orientation.beta;
-				global.startTilt.gamma	= gyroData.orientation.gamma;
-
-				// Trigger event
-				$d.trigger('hasGyroscopeData.paver', [gyroData]);
-
-				// Do paver
-				_doPaver.call(t);
-
-			}, function(gyroData) {
-				// We do not have gyroscopic data
-				global.features.hasGyroscope = false;
-
-				// Trigger event
-				$d.trigger('hasNoGyroscopeData.paver', [gyroData]);
-
-				// Do paver
-				_doPaver.call(t);
-			});
-
 			// Paver loop
 			var _doPaver = function() {
 				var $t = $(this);
@@ -858,6 +832,34 @@
 				}
 				
 			};
+
+			// Wait for gyroscopic data
+			$.when(_check.hasGyroscope()).then(function(gyroData) {
+				// We have gyroscopic data!
+				// Do paver
+				global.features.hasGyroscope = true;
+
+				// Establish startTilt
+				global.startTilt.alpha	= gyroData.orientation.alpha;
+				global.startTilt.beta	= gyroData.orientation.beta;
+				global.startTilt.gamma	= gyroData.orientation.gamma;
+
+				// Trigger event
+				$d.trigger('hasGyroscopeData.paver', [gyroData]);
+
+				// Do paver
+				_doPaver.call(t);
+
+			}, function(gyroData) {
+				// We do not have gyroscopic data
+				global.features.hasGyroscope = false;
+
+				// Trigger event
+				$d.trigger('hasNoGyroscopeData.paver', [gyroData]);
+
+				// Do paver
+				_doPaver.call(t);
+			});
 
 			// Return
 			return t;
