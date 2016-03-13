@@ -105,17 +105,14 @@
 					_fun.getContainerDimensions(this);
 					_fun.getCenter(this);
 
-					// Wait for panorama to load
-					paver.$p.on('load', checkReadiness);
-					var timer = setInterval(checkReadiness, 50);
-					function checkReadiness () {
+					var checkReadiness = function () {
 						if (paver.$p[0].naturalWidth) {
 							paver.$p.off('load', checkReadiness);
 							clearInterval(timer);
 							init();
 						}
 					}
-					function init() {
+					var init = function() {
 						// Fire image loaded event
 						paver.$t.trigger('imageLoadDone.paver');
 
@@ -168,6 +165,10 @@
 							paver.pan(ratio);
 						});
 					}
+					
+					// Wait for panorama to load
+					paver.$p.on('load', checkReadiness);
+					var timer = setInterval(checkReadiness, 50);
 				}
 			},
 			fallback: function() {
