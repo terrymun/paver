@@ -146,6 +146,15 @@ For examples of advanced usage, please refer to the [Advanced Usage](http://terr
 ### Custom triggers
 Paver supports custom triggers, which allows developers to force recomputation of the panorama wrapper dimensions in the event of user-interaction. In addition, Paver will also fire custom events to allow developers to track the initialization progress of the plugin. Please refer to [Custom Triggers & Events](http://terrymun.github.io/paver/demo/custom-triggers-events.html) for more information.
 
+## For developers
+Paver is using [Grunt](http://gruntjs.com) for building. It makes things a lot easier&mdash;from uglifying JS files to autoprefixing CSS. If you are intending to make a custom build, run:
+
+```bash
+$ npm install
+$ grunt
+```
+
+`grunt-watch` is also included, so you may build on the go by using: `grunt watch`.
 
 ## Frequently Asked Questions
 1.  **Paver is not working in my installation. Where should I start?**  
