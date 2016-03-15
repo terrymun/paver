@@ -1,5 +1,5 @@
 /* Variables */
-$throttleDuration: 0.1s;
+$transitionDuration: .25s;
 $scrollerBackground: rgba(255,255,255,.33);
 $scrollerHandlerBackground: rgba(255,255,255,.75);
 $scrollerHeight: 4px;
@@ -66,8 +66,6 @@ $scrollerHandlerWidth: 12.5%;
 		background-size: cover;
 		position: relative;
 		z-index: 1;
-		/* transition-duration must match the panningThrottle values in JS config */
-		transition: all $throttleDuration linear;
 	}
 	div.paver__scroller {
 		background-color: $scrollerBackground;
@@ -79,8 +77,7 @@ $scrollerHandlerWidth: 12.5%;
 		left: $scrollerLeftOffset;
 		right: $scrollerRightOffset;
 		z-index: 2;
-		/* transition-duration must match the panningThrottle values in JS config */
-		transition: all $throttleDuration ease-in-out;
+		transition: opacity $transitionDuration ease-in-out;
 
 		span {
 			background-color: $scrollerHandlerBackground;
@@ -88,7 +85,6 @@ $scrollerHandlerWidth: 12.5%;
 			display: block;
 			width: $scrollerHandlerWidth;
 			height: $scrollerHeight;
-			transition: all .125s linear;
 		}
 	}
 

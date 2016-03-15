@@ -67,6 +67,20 @@
 					</tr>
 				</thead>
 				<tbody>
+					<tr id="config__cursor-throttle">
+						<th>cursorThrottle</th>
+						<td>data-cursor-throttle</td>
+						<td>Numeric</td>
+						<td>1000/60</td>
+						<td><p>This throttles to the listening of the <code>mousemove</code> events, to prevert jittery panning actions of Paver-enabled panoramas. Defaults to 60fps.</p></td>
+					</tr>
+					<tr id="config__gyroscope-throttle">
+						<th>gyroscopeThrottle</th>
+						<td>data-gyroscope-throttle</td>
+						<td>Numeric</td>
+						<td>1000/60</td>
+						<td><p>This throttles to the listening of the <code>deviceorientation</code> events, to prevert jittery panning actions of Paver-enabled panoramas. Defaults to 60fps.</p></td>
+					</tr>
 					<tr id="config__failure-message">
 						<th>failureMessage</th>
 						<td>data-failure-message</td>
@@ -124,7 +138,7 @@
 						<td>data-panning-throttle</td>
 						<td>Numeric (ms)</td>
 						<td>125</td>
-						<td><p>This throttles to the listening of the <code>deviceorientation</code> and/or <code>mousemove</code> events, to prevert jittery panning actions of Paver-enabled panoramas. This is partially due to the high sampling rate of gyroscoping data. However, increasing this number (longer durations) will lead to jerky panning movements due to low resolution of device tilt available to Paver.</p>
+						<td><p class="user-message warning">This parameter is deprecated in favour of separate throttling values for mouse-based and gyroscope-based events. See: <code><a href="#config__cursor-throttle">cursorThrottle</a></code> and <code><a href="#config__gyroscope-throttle">gyroscopeThrottle</a></code> respectively.</p><p>This throttles to the listening of the <code>deviceorientation</code> and/or <code>mousemove</code> events, to prevert jittery panning actions of Paver-enabled panoramas. This is partially due to the high sampling rate of gyroscoping data. However, increasing this number (longer durations) will lead to jerky panning movements due to low resolution of device tilt available to Paver.</p>
 						<p class="user-message note">When updating this value, remember to update the <code>transition-duration</code> property in <code>paver.scss</code> (and recompile it) or <code>paver.css</code>, such that it is equivalent to the <code>panningThrottle</code> value.</p></td>
 					</tr>
 					<tr id="config__resize-throttle">

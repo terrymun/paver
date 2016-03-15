@@ -4,9 +4,8 @@
     "version": "1.2.3",
     "homepage": "https://github.com/terrymun/paver",
     "main": [
-        "./jquery.paver.js",
-        "./jquery.paver.min.js",
-        "./css/paver.css"
+        "./dist/js/jquery.paver.min.js",
+        "./dist/css/paver.min.css"
     ],
     "authors": [
         {

@@ -1,10 +1,11 @@
 {
   "name": "paver",
   "filename": "jquery.paver.min.js",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "A minimal panorama/image viewer replicating the effect seen in Facebook Pages app.",
-  "homepage": "https://github.com/terrymun/paver",
-  "main": "jquery.paver.js",
+  "homepage": "http://terrymun.github.io/paver/",
+  "author": "Terry Mun <hello@terrymun.com> (http://terrymun.com)",
+  "main": "dist/js/jquery.paver.min.js",
   "authors": [
     {
       "name": "Terry Mun",
@@ -15,7 +16,7 @@
   "maintainers": [
     "Terry Mun <hello@terrymun.com>"
   ],
-  "repositories": {
+  "repository": {
     "type": "git",
     "url": "https://github.com/terrymun/paver/"
   },
@@ -29,10 +30,7 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "package.json",
-    "demo",
-    "src"
+    "package.json"
   ],
   "dependencies": {
     "jquery": ">=1.9"
@@ -42,14 +40,28 @@
     {
       "basePath": "/dist/",
       "files": [
-        "./jquery.paver.js",
-        "./jquery.paver.min.js",
-        "./css/fluidbox.css"
+        "./dist/js/jquery.paver.min.js",
+        "./dist/css/paver.min.css"
       ]
     }
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0"
   },
-  "author": "Terry Mun <hello@terrymun.com> (http://terrymun.com)"
+  "devDependencies": {
+    "autoprefixer": "^6.2.3",
+    "cssnano": "^3.4.0",
+    "grunt": "^0.4.5",
+    "grunt-concurrent": "^2.0.3",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-contrib-uglify": "^0.11.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-postcss": "^0.7.1",
+    "grunt-sass": "^1.1.0",
+    "jshint-stylish": "^2.0.1",
+    "load-grunt-config": "^0.17.2",
+    "time-grunt": "^1.2.1",
+    "jshint-stylish": "^2.1.0"
+  }
 }

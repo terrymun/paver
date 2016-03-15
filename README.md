@@ -123,7 +123,8 @@ defaults = {
 
 	// Performance
 	grain: 3,
-	panningThrottle: 100,
+	cursorThrottle: (1000/60),
+	gyroscopeThrottle: (1000/60),
 	resizeThrottle: 500,
 
 	// For mousemove event
@@ -131,7 +132,7 @@ defaults = {
 	
 	// For deviceOrientationEvent
 	tilt: true,
-	tiltSensitivity: 0.2,
+	tiltSensitivity: 0.1,
 	tiltScrollerPersistence: 500,
 	tiltSmoothingFunction: 'gaussian',
 	tiltThresholdPortrait: 12,
@@ -163,6 +164,7 @@ Since Paver is provided as-is and free-of-charge, I am sorry to inform you that 
 ## Changelog
 | Version | Comments |
 |---------|----------|
+| 1.3.0   | <p>**Bug fix**: Fixued issue where Paver fails to initialize in more recent versions of Firefox.</p><p>**Update**: `panningThrottle` now deprecated, delegated to `cursorThrottle` and `gyroscopeThrottle` depending on input.</p> |
 | 1.2.3   | <p>**Bug fix**: Fixed incorrect positioning when resizing panoramas with Paver instances toggled on and off (sub- and super-threshold overflow toggling).</p> |
 | 1.2.2	  | <p>**Bug fix**: Fixed order of script blocks so that functions call will not be undefined in Safari.</p> |
 | 1.2.1   | <p>**Bug fix**: Last known panned position not recorded properly, and buggy horizontal panning due to accidental use of `parseInt()`.
