@@ -724,10 +724,10 @@
 				var exitCode = 0;
 
 				if(/[\s+]/g.test(url)) {
-					console.warn('Paver: Paver has detected characters in your URL string that need to be properly encoded/escaped. Whitespace(s) have to be escaped manually. See RFC3986 documentation.');
+					console.warn('Paver: Paver has detected characters in your URL string ('+url+') that need to be properly encoded/escaped. Whitespace(s) have to be escaped manually. See RFC3986 documentation.');
 					exitCode = 1;
 				} else if(/[\"\'\(\)]/g.test(url)) {
-					console.warn('Paver: Plugin will proceed, but it has detected characters in your URL string that need to be properly encoded/escaped. These will be escaped for you. See RFC3986 documentation.');
+					console.warn('Paver: Plugin will proceed, but it has detected characters in your URL string ('+url+') that need to be properly encoded/escaped. These will be escaped for you. See RFC3986 documentation.');
 					exitCode = 0;
 				}
 				return exitCode;
