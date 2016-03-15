@@ -125,8 +125,12 @@
 							paver.instanceData.panoAspectRatio		= paver.instanceData.naturalWidth/paver.instanceData.naturalHeight;
 							paver.instanceData.containerAspectRatio	= paver.instanceData.outerWidth/paver.instanceData.outerHeight;
 
-							// Panorama replacement
-							_fun.replacePanorama(paver);
+							// Panorama replacement, but check if image source conforms to standard
+							if(_fun.checkURL(paver.$p.attr('src'))) {
+								return false;
+							} else {
+								_fun.replacePanorama(paver);
+							}
 
 							// Compute
 							_fun.compute(paver);
@@ -459,7 +463,7 @@
 				var $newP = $('<div />', {
 						'class': 'paver__pano'
 					})
-					.css('background-image', 'url('+paver.$p.attr('src')+')'),
+					.css('background-image', 'url('+_fun.formatURL(paver.$p.attr('src'))+')'),
 
 					$scroller = $('<div />', {
 						'class': 'paver__scroller'
@@ -714,6 +718,26 @@
 					xPos: smooth(deltaX, thresholdX),
 					yPos: smooth(deltaY, thresholdY)
 				});
+			},
+			// URL checks
+			checkURL: function(url) {
+				var exitCode = 0;
+
+				if(/[\s+]/g.test(url)) {
+					console.warn('Paver: Paver has detected characters in your URL string that need to be properly encoded/escaped. Whitespace(s) have to be escaped manually. See RFC3986 documentation.');
+					exitCode = 1;
+				} else if(/[\"\'\(\)]/g.test(url)) {
+					console.warn('Paver: Plugin will proceed, but it has detected characters in your URL string that need to be properly encoded/escaped. These will be escaped for you. See RFC3986 documentation.');
+					exitCode = 0;
+				}
+				return exitCode;
+			},
+			formatURL: function(url) {
+				return url
+					.replace(/"/g, '%22')
+					.replace(/'/g, '%27')
+					.replace(/\(/g, '%28')
+					.replace(/\)/g, '%29');
 			}
 		};
 
