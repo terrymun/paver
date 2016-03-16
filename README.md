@@ -5,6 +5,7 @@ Replicating the photo viewer/panner seen on the experimental Facebook Pages app,
 [![Build Status](https://travis-ci.org/terrymun/paver.svg?branch=master)](https://travis-ci.org/terrymun/paver) ![Latest Github release](https://img.shields.io/github/release/terrymun/paver.svg?style=flat)
 
 Here is a gif showing how Paver should work:
+
 ![Paver Demo](http://terrymun.github.io/paver/demo/images/paver-demo.gif)
 
 Paver had been tested in the latest versions of Chrome, Firefox, Safari and iOS Safari.
