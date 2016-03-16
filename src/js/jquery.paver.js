@@ -512,7 +512,7 @@
 						.find('div.paver__pano')
 							.css({
 								width: paver.instanceData.outerWidth,
-								height: paver.instanceData.outerWidth/paver.instanceData.panoAspectRatio,
+								height: '100%',
 								left: '50%',
 								transform: 'translateX(-50%)'
 							});
