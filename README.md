@@ -13,6 +13,10 @@ Special thanks to:
 
 - [jQuery Plugin Boilerplate](https://github.com/jquery-boilerplate/jquery-boilerplate), which made authoring Paver a lot easier
 
+You can see Paver.js working in the wild at:
+
+- [An exclusive look at how the First Lady mastered social media](http://www.theverge.com/2016/3/14/11179572/first-lady-michelle-obama-vr-interview-social-media-pictures#scene1) by The Verge ([@verge](https://twitter.com/verge))
+
 ## Introduction
 
 **Paver** was initially a simple personal project to make panoramas more accessible. After upgrading from an iPhone 4 to a spanking new 6, I unlocked the world of panoramas made by a single, steady wave of the hand. Panoramas are breathtakingly beautiful when used correctly, but I have always been frustrated with how the default screens, in aspect ratios that are largely incompatible with the ultrawide format of panoramas, don't do these work much justice.
