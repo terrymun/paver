@@ -17,7 +17,7 @@ module.exports = {
             expand: true,
             cwd: 'demo/css',
             src: ['*.css'],
-            dest: 'demo/css',
+            dest: 'demo/dist/css',
             ext: '.css'
         }]
     },
@@ -40,7 +40,7 @@ module.exports = {
             expand: true,
             cwd: 'demo/css',
             src: ['*.css'],
-            dest: 'demo/css',
+            dest: 'demo/dist/css',
             ext: '.min.css'
         }]
     }

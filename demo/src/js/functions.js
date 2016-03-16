@@ -10,7 +10,7 @@ $(function () {
 			'animation': 'animationend'
 		};
 
-		for (transition in eventNames) {
+		for (var transition in eventNames) {
 			if (el.style[transition] !== undefined) {
 				return eventNames[transition];
 			}

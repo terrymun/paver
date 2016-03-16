@@ -6,12 +6,14 @@
   src: url("../fonts/BLOKKRegular.eot?#iefix") format("embedded-opentype"), url("../fonts/BLOKKRegular.woff") format("woff"), url("../fonts/BLOKKRegular.svg#BLOKKRegular") format("svg");
   font-weight: normal;
   font-style: normal; }
+
 @font-face {
   font-family: 'fontello';
   src: url("../fonts/fontello.eot");
   src: url("../fonts/fontello.eot#iefix") format("embedded-opentype"), url("../fonts/fontello.woff") format("woff"), url("../fonts/fontello.ttf") format("truetype"), url("../fonts/fontello.svg#fontello") format("svg");
   font-weight: normal;
   font-style: normal; }
+
 .icon-font::before {
   font-family: "fontello";
   font-style: normal;
@@ -104,6 +106,7 @@ header {
     stroke-dashoffset: 0; }
   100% {
     stroke-dashoffset: -210; } }
+
 /* Content Styles */
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
@@ -691,6 +694,7 @@ footer {
         height: auto; }
     #smoothing-functions__list li > div.graph .graph-equation {
       flex-basis: 100%; } }
+
 @media only screen and (max-width: 979px) {
   /* Features */
   #features + ul {
@@ -701,10 +705,10 @@ footer {
       display: block;
       padding: 0;
       width: 100%; } }
+
 @media only screen and (max-width: 768px) {
   html {
     font-size: 16px; }
-
   header {
     padding-left: 3rem;
     padding-right: 3rem;
@@ -716,21 +720,16 @@ footer {
       margin-right: -3rem; }
       header > nav ul {
         flex-wrap: wrap; }
-
   aside {
     display: none; }
     aside + pre, aside + pre[class*='language'] {
       width: 100%; }
-
   main {
     margin: 0 3rem; }
-
   h2 {
     font-size: 2rem; }
-
   pre[class*=language-] > code[data-language] {
     max-height: none; }
-
   *[data-paver], .panorama {
     height: 50vh;
     min-height: 300px;
@@ -738,11 +737,9 @@ footer {
     position: relative;
     left: -3rem;
     width: calc(100% + 6rem); }
-
   /* Responsive tables */
   table, thead, tbody, th, td, tr {
     display: block; }
-
   table {
     font-size: 1rem;
     left: 0;
@@ -777,7 +774,6 @@ footer {
         background-color: #8BA3B0; }
       table tbody tr:target td {
         background-color: rgba(139, 163, 176, 0.5); }
-
   #configuration-options__table tbody th::before {
     content: 'Option'; }
   #configuration-options__table tbody td:nth-of-type(1)::before {
@@ -788,14 +784,12 @@ footer {
     content: 'Default'; }
   #configuration-options__table tbody td:nth-of-type(4)::before {
     content: 'Description'; }
-
   #custom-triggers__table tbody th::before {
     content: 'Function'; }
   #custom-triggers__table tbody td:nth-of-type(1)::before {
     content: 'Arguments'; }
   #custom-triggers__table tbody td:nth-of-type(2)::before {
     content: 'Description'; }
-
   #custom-events-global__table tbody th::before,
   #custom-events-scoped__table tbody th::before {
     content: 'Event'; }
@@ -805,6 +799,7 @@ footer {
   #custom-events-global__table tbody td:nth-of-type(2)::before,
   #custom-events-scoped__table tbody td:nth-of-type(2)::before {
     content: 'Description'; } }
+
 @media only screen and (max-width: 579px) {
   header > nav ul {
     display: block; }
@@ -812,9 +807,8 @@ footer {
       display: none; }
     header > nav ul li.active a {
       background-color: rgba(255, 255, 255, 0.75); }
-
   /* Smoothing Functions */
   #smoothing-functions__list li > div.graph div.graph-plot svg {
     font-size: 1.5rem; } }
 
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=style.min.css.map */

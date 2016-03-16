@@ -7,7 +7,8 @@ module.exports = {
 
     scripts: {
         files: [
-            'src/js/*.js'
+            'src/js/*.js',
+            'demo/src/js/*.js'
         ],
         tasks: [
             'jshint',
