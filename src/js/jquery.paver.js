@@ -539,7 +539,7 @@
 			// Generic handler to bind all events
 			bindEvents: function(paver) {
 				if(global.features.isTouch) {
-					if(global.features.hasGyroscope){
+					if(global.features.hasGyroscope && paver.settings.tilt){
 						_fun.bindOrientationEvents(paver);
 					}
 				} else {
@@ -943,7 +943,7 @@
 			// Wait for gyroscopic data
 			$.when(_check.hasGyroscope()).then(function(gyroData) {
 				
-				if(typeof gyroData !== typeof undefined) {
+				if(typeof gyroData !== typeof undefined && options.tilt) {
 					_paverGyroData.yes(gyroData);
 				} else {
 					_paverGyroData.no();				
