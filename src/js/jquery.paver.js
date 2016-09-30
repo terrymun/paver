@@ -42,7 +42,7 @@
 				tiltThresholdPortrait: 12,
 				tiltThresholdLandscape: 24
 			},
-			global = {};
+			globalData = {};
 
 		 // Check the availability of the console object. This ensures compatibility with IE8.
 		if(typeof console === "undefined" || console.warn === "undefined" ) {
@@ -74,12 +74,12 @@
 			this.mousemove = {};
 
 			// Initialize
-			if(global.features.hasGyroscope === true) {
+			if(globalData.features.hasGyroscope === true) {
 				// Has functional gyroscope
 				this.init();
 			} else {
 				// No functional gyroscope
-				if(global.features.isTouch) {
+				if(globalData.features.isTouch) {
 					this.fallback();
 				} else {
 					this.init();
@@ -538,8 +538,8 @@
 			},
 			// Generic handler to bind all events
 			bindEvents: function(paver) {
-				if(global.features.isTouch) {
-					if(global.features.hasGyroscope && paver.settings.tilt){
+				if(globalData.features.isTouch) {
+					if(globalData.features.hasGyroscope && paver.settings.tilt){
 						_fun.bindOrientationEvents(paver);
 					}
 				} else {
@@ -623,7 +623,7 @@
 
 							// Listen to adjusted beta and gamma, as well as the appropriate tilt thresholds
 							// According to screen orientation
-							switch(global.screenOrientationAngle) {
+							switch(globalData.screenOrientationAngle) {
 								case 0:
 									// Portrait-primary
 									screenTilt = {
@@ -749,7 +749,7 @@
 				args = arguments;
 
 			// Global data
-			global = {
+			globalData = {
 				features: {
 					isTouch: false,
 					hasGyroscope: false,
@@ -765,9 +765,9 @@
 				isTouch: function() {
 					try {
 						document.createEvent('TouchEvent');
-						global.features.isTouch = true;
+						globalData.features.isTouch = true;
 					} catch (e) {
-						global.features.isTouch = false;
+						globalData.features.isTouch = false;
 					}
 				},
 				// Does it have a working gyroscope?
@@ -776,9 +776,9 @@
 						_deviceOrientationEvent = false;
 
 					var handler = function(e) {
+
 							// Check if we have any useful gyroscopic data
 							if(e.alpha !== null && e.beta !== null && e.gamma !== null) {
-								//alert(e.alpha);
 								d.resolve({
 									orientation: {
 										alpha: e.alpha,
@@ -842,7 +842,7 @@
 				// What is the device orientation?
 				// Logic from Full-Tilt: https://github.com/richtr/Full-Tilt/
 				hasOrientation: function() {
-					global.screenOrientationAngle = (global.features.hasScreenOrientationAPI ? window.screen.orientation.angle : (window.orientation || 0));
+					globalData.screenOrientationAngle = (globalData.features.hasScreenOrientationAPI ? window.screen.orientation.angle : (window.orientation || 0));
 				}
 			};
 
@@ -862,13 +862,13 @@
 					// Tilt is relative to startTilt
 					var deviceOrientationHandler = function(e) {
 						var t = {
-								a: e.alpha - global.startTilt.alpha,
-								b: e.beta - global.startTilt.beta,
-								g: e.gamma - global.startTilt.gamma
+								a: e.alpha - globalData.startTilt.alpha,
+								b: e.beta - globalData.startTilt.beta,
+								g: e.gamma - globalData.startTilt.gamma
 							};
 						$t.trigger('devicetilt.paver', [t]);
 					};
-					if(global.features.hasGyroscope) {
+					if(globalData.features.hasGyroscope) {
 						window.addEventListener('deviceorientation', deviceOrientationHandler, false);
 					}
 
@@ -908,12 +908,12 @@
 					yes: function(gyroData) {
 						// We have gyroscopic data!
 						// Do paver
-						global.features.hasGyroscope = true;
+						globalData.features.hasGyroscope = true;
 
 						// Establish startTilt
-						global.startTilt.alpha	= gyroData.orientation.alpha;
-						global.startTilt.beta	= gyroData.orientation.beta;
-						global.startTilt.gamma	= gyroData.orientation.gamma;
+						globalData.startTilt.alpha	= gyroData.orientation.alpha;
+						globalData.startTilt.beta	= gyroData.orientation.beta;
+						globalData.startTilt.gamma	= gyroData.orientation.gamma;
 
 						// Trigger event
 						$d.trigger('hasGyroscopeData.paver', [gyroData]);
@@ -924,7 +924,7 @@
 					no: function() {
 						// We do not have gyroscopic data
 						console.warn('Gyroscopic data unavailable. Falling back to cursor-based panning.');
-						global.features.hasGyroscope = false;
+						globalData.features.hasGyroscope = false;
 						var gyroData = {
 							status: {
 								deviceOrientationEventSupport: false,
@@ -940,16 +940,20 @@
 					}
 				};
 
+			// Merge defaults into options, into dataset
+			var settings = $.extend({}, defaults, options, $(this.element).data());
+
 			// Wait for gyroscopic data
 			$.when(_check.hasGyroscope()).then(function(gyroData) {
-				
-				if(typeof gyroData !== typeof undefined && options.tilt) {
+
+				if(typeof gyroData !== typeof undefined && settings.tilt === true) {
 					_paverGyroData.yes(gyroData);
 				} else {
 					_paverGyroData.no();				
 				}
 
 			}, function(gyroData) {
+
 				_paverGyroData.no();
 			});
 
