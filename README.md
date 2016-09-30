@@ -8,7 +8,7 @@ Here is a gif showing how Paver should work:
 
 ![Paver Demo](http://terrymun.github.io/paver/demo/images/paver-demo.gif)
 
-Paver had been tested in the latest versions of Chrome, Firefox, Safari and iOS Safari.
+Paver had been tested in the latest versions of Chrome, Firefox, Safari and iOS Safari. It requires jQuery v1.7+, and has been thoroughly tested with jQuery v1.7+, v2+, and v3.1+. 
 
 Special thanks to:
 
