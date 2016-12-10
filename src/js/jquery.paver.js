@@ -817,15 +817,17 @@
 						// Firefox caveat catch
 						// Firefox exposes window.DeviceOrientationEvent even if it is incapable of feeding gyroscoping data (e.g. on desktops),
 						// so we use a simple timeout function to check if the event is fired
-						window.setTimeout(function() {
-							d.reject({
-								status: {
-									deviceOrientationEventSupport: true,
-									deviceOrientationData: false
-								}
-							});
-							return d.promise();
-						}, 250);
+						if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+							window.setTimeout(function() {
+								d.reject({
+									status: {
+										deviceOrientationEventSupport: true,
+										deviceOrientationData: false
+									}
+								});
+								return d.promise();
+							}, 250);
+						}
 					} else {
 						
 						d.reject({
