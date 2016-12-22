@@ -22,7 +22,7 @@ module.exports = {
     // Production settings
     prod: {
         options: {
-            outputStyle: 'nested',
+            outputStyle: 'expanded',
             sourceMap: true
         },
         files: [{
@@ -30,7 +30,7 @@ module.exports = {
             cwd: 'src/css',
             src: ['*.scss'],
             dest: 'dist/css',
-            ext: '.min.css'
+            ext: '.css'
         }, {
             expand: true,
             cwd: 'demo/src/css',

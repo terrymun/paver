@@ -4,7 +4,8 @@ module.exports = {
         options: {
             map: true,
             processors: [
-                require('autoprefixer')({browsers: '> 2.5%'})
+                require('autoprefixer')({browsers: '> 2.5%'}),
+                require('cssnano')({zindex: false})
             ]
         },
         files: [{
