@@ -1,7 +1,7 @@
 {
     "name": "paver",
     "description": "A minimal panorama/image viewer replicating the effect seen in Facebook Pages app.",
-    "version": "1.2.3",
+    "version": "1.3.2",
     "homepage": "https://github.com/terrymun/paver",
     "main": [
         "./dist/js/jquery.paver.min.js",
