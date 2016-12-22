@@ -1,5 +1,5 @@
 {
-  "name": "paver",
+  "name": "@terrymun/paver",
   "filename": "jquery.paver.min.js",
   "version": "1.3.3",
   "description": "A minimal panorama/image viewer replicating the effect seen in Facebook Pages app.",
@@ -59,9 +59,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-postcss": "^0.7.1",
     "grunt-sass": "^1.1.0",
-    "jshint-stylish": "^2.0.1",
+    "jshint-stylish": "^2.1.0",
     "load-grunt-config": "^0.17.2",
-    "time-grunt": "^1.2.1",
-    "jshint-stylish": "^2.1.0"
+    "time-grunt": "^1.2.1"
   }
 }
