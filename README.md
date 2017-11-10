@@ -186,13 +186,4 @@ Since Paver is provided as-is and free-of-charge, I am sorry to inform you that 
 
 
 ## Changelog
-| Version | Comments |
-|---------|----------|
-| 1.3.0   | <p>**Bug fix**: Fixued issue where Paver fails to initialize in more recent versions of Firefox.</p><p>**Update**: `panningThrottle` now deprecated, delegated to `cursorThrottle` and `gyroscopeThrottle` depending on input.</p> |
-| 1.2.3   | <p>**Bug fix**: Fixed incorrect positioning when resizing panoramas with Paver instances toggled on and off (sub- and super-threshold overflow toggling).</p> |
-| 1.2.2	  | <p>**Bug fix**: Fixed order of script blocks so that functions call will not be undefined in Safari.</p> |
-| 1.2.1   | <p>**Bug fix**: Last known panned position not recorded properly, and buggy horizontal panning due to accidental use of `parseInt()`.
-</p> |
-| 1.2.0   | <p>**Better demo pages**: Demo pages have been restyled (slightly) and with navigation added.</p><p>**Feature addition**: Now you can [declare custom smoothing functions](http://terrymun.github.io/paver/demo/usage-notes.html#custom-smoothing-function). Appropriate documentations have been added/updated to reflec this new feature&mdash;and the smoothing functions documentation now comes with beautiful [d3.js](http://d3js.org/) powered graphs, and [MathJax](https://www.mathjax.org/) powered equations.</p> |
-| 1.1.0   | <p>**Code optimization**: Stored global variables and checks within the `global` variable, removed the need to pass them to individual plugin instances.</p><p>**Bug fix**:</p><ul><li>Minor fix for setTimeout and clearTimeout for scroller persistence</li><li>Added missing module of handling responsiveness of panorama when viewport is too wide</li></ul> |
-| 1.0.0   | Official release |
+Please refer to the [release notes](https://github.com/terrymun/paver/releases).

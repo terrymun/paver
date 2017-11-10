@@ -1,6 +1,6 @@
 // Paver
 // Description: A minimal panorama/image viewer replicating the effect seen in Facebook Pages app
-// Version: 1.3.0
+// Version: 1.3.4
 // Author: Terry Mun
 // Author URI: http://terrymun.com
 ;(function ( $, window, document, undefined ) {
