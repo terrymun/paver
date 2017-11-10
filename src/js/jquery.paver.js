@@ -45,22 +45,27 @@
 			globalData = {};
 
 		 // Check the availability of the console object. This ensures compatibility with IE8.
-		if(typeof console === "undefined" || console.warn === "undefined" ) {
+		if (console === void 0) {
 			console = {};
-			console.warn = function(){};
+
+			if (console.info === void 0)
+				console.info = function(){};
+
+			if (console.warn === void 0)
+				console.warn = function(){};
 		}
 
 		// The actual plugin constructor
 		var Plugin = function(element, options) {
 
 			// Assign element
-			this.element	= element;
+			this.element = element;
 
 			// Merge defaults into options, into dataset
-			this.settings	= $.extend({}, defaults, options, $(this.element).data());
+			this.settings = $.extend({}, defaults, options, $(this.element).data());
 
 			// Coerce settings
-			if(parseInt(this.settings.grain <= 0)) {
+			if (parseInt(this.settings.grain <= 0)) {
 				this.settings.grain = 1;
 			}
 			this.settings.startPosition				= Math.max(Math.min(this.settings.startPosition, 1), 0);
@@ -68,22 +73,23 @@
 			this.settings.tiltThresholdLandscape	= Math.max(Math.min(this.settings.tiltThresholdLandscape, 180), 0);
 
 			// Store plugin name
-			this._name		= pluginName;
+			this._name = pluginName;
 
 			// Store and expose mouse coordinates
 			this.mousemove = {};
 
 			// Initialize
-			if(globalData.features.hasGyroscope === true) {
+			if (globalData.features.hasGyroscope) {
 				// Has functional gyroscope
 				this.init();
 			} else {
 				// No functional gyroscope
-				if(globalData.features.isTouch) {
+				if (globalData.features.isTouch) {
 					this.fallback();
-				} else {
-					this.init();
+					return;
 				}
+
+				this.init();
 			}
 		};
 
@@ -98,7 +104,7 @@
 				var paver = this;
 
 				// Only perform initialization when it is NOT yet initialized
-				if(!paver.instanceData || !paver.instanceData.initialized) {
+				if (!paver.instanceData || !paver.instanceData.initialized) {
 
 					paver.instanceData = {};
 
@@ -126,17 +132,16 @@
 							paver.instanceData.containerAspectRatio	= paver.instanceData.outerWidth/paver.instanceData.outerHeight;
 
 							// Panorama replacement, but check if image source conforms to standard
-							if(_fun.checkURL(paver.$p.attr('src'))) {
+							if (_fun.checkURL(paver.$p.attr('src')))
 								return false;
-							} else {
-								_fun.replacePanorama(paver);
-							}
+
+							_fun.replacePanorama(paver);
 
 							// Compute
 							_fun.compute(paver);
 
 							// Check
-							if(_fun.checkOverflow(paver)) {
+							if (_fun.checkOverflow(paver)) {
 								// Position panorama centrally the first time
 								paver.instanceData.panCounter = 0;
 								paver.pan({
@@ -186,7 +191,9 @@
 
 					// Trigger callback when image is loaded
 					img.onload = function() {
-						if(!_naturalDimensions) loadedCallback();
+						if (!_naturalDimensions)
+							loadedCallback();
+
 						window.clearInterval(t);
 					};
 					img.src = paver.$p.attr('src');
@@ -198,7 +205,7 @@
 				$d.trigger('disabled.paver');
 
 				// If failure message is turned on
-				if(this.settings.gracefulFailure) {
+				if (this.settings.gracefulFailure) {
 					var $t = $(this.element),
 						$msg = $('<div />', {
 							'class': 'paver__fallbackMessage'
@@ -243,21 +250,22 @@
 			destroy: function() {
 				var pluginData = $(this.element).data('plugin_paver');
 
-				if(pluginData) {
+				// Do nothing if no plugin data is available
+				if (!pluginData)
+					return;
 
-					// Unbind events
-					this.unbindEvents();
+				// Unbind events
+				this.unbindEvents();
 
-					// DOM reversal
-					$(this.element)
-						.trigger('destroyed.paver')							// Fire destroyed event
-						.removeClass('paver--initialized paver--ready')		// Remove classes
-						.empty()											// Empty element
-						.html(pluginData.instanceData.originalNode);		// Attach original node
+				// DOM reversal
+				$(this.element)
+					.trigger('destroyed.paver')							// Fire destroyed event
+					.removeClass('paver--initialized paver--ready')		// Remove classes
+					.empty()											// Empty element
+					.html(pluginData.instanceData.originalNode);		// Attach original node
 
-					// Destroy plugin data entirely
-					$(this.element).data('plugin_paver', null);
-				}
+				// Destroy plugin data entirely
+				$(this.element).data('plugin_paver', null);
 			},
 			recompute: function() {
 				var $t			= $(this.element),
@@ -274,22 +282,20 @@
 				$t.trigger('recomputeStart.paver');
 				_fun.compute(this);
 
-				// Check overflow
-				if(_fun.checkOverflow(this)) {
-
-					// Pan to last known position
-					paver.pan({
-						xPos: Math.min(paver.instanceData.lastPanX,1),
-						yPos: Math.min(paver.instanceData.lastPanY,1)
-					});
-
-					// Turn paver on
-					_fun.paverOn(this);
-				} else {
-					// Turn off paver
+				// If not overflowing, turn off paver
+				if (!_fun.checkOverflow(this)) {
 					_fun.paverOff(this);
+					return;
 				}
-				
+
+				// Pan to last known position
+				paver.pan({
+					xPos: Math.min(paver.instanceData.lastPanX,1),
+					yPos: Math.min(paver.instanceData.lastPanY,1)
+				});
+
+				// Turn paver on
+				_fun.paverOn(this);
 			},
 			pan: function(ratio) {
 
@@ -300,25 +306,25 @@
 					paver		= $t.data('plugin_paver');
 
 				// If ratio exists and if it is valid
-				if(!ratio) {
+				if (!ratio) {
 					ratio = {
 						xPos: paver.settings.startPosition,
 						yPos: paver.settings.startPosition
 					};
 				} else {
-					if(ratio.xPos === undefined) ratio.xPos = paver.settings.startPosition;
-					if(ratio.yPos === undefined) ratio.yPos = paver.settings.startPosition;
+					if (ratio.xPos === void 0) ratio.xPos = paver.settings.startPosition;
+					if (ratio.yPos === void 0) ratio.yPos = paver.settings.startPosition;
 				}
 				
 				// Coerce positions
-				if(ratio.xPos > 1) {
+				if (ratio.xPos > 1) {
 					ratio.xPos = 1;
-				} else if(ratio.xPos < 0) {
+				} else if (ratio.xPos < 0) {
 					ratio.xPos = 0;
 				}
-				if(ratio.yPos > 1) {
+				if (ratio.yPos > 1) {
 					ratio.yPos = 1;
-				} else if(ratio.yPos < 0) {
+				} else if (ratio.yPos < 0) {
 					ratio.yPos = 0;
 				}
 
@@ -327,7 +333,7 @@
 					rY = ratio.yPos.toFixed(grain);
 
 				// Keep track of panning count
-				if(!paver.instanceData.panCounter || paver.instanceData.panCounter === 0) {
+				if (!paver.instanceData.panCounter || paver.instanceData.panCounter === 0) {
 					// First pan involves positioning based on settings
 					$t.trigger('initialPanStart.paver');
 				} else {
@@ -346,7 +352,7 @@
 
 				// Fire custom event on end of pan (end of transition)
 				$w.one(_fun.whichTransitionEnd(), function() {
-					if(!paver.instanceData.panCounter || paver.instanceData.panCounter === 0) {
+					if (!paver.instanceData.panCounter || paver.instanceData.panCounter === 0) {
 						// First pan involves positioning based on settings
 						$t.trigger('initialPanEnd.paver');
 					} else {
@@ -374,7 +380,7 @@
 					};
 
 				for (transition in eventNames) {
-					if (el.style[transition] !== undefined) return eventNames[transition];
+					if (el.style[transition] !== void 0) return eventNames[transition];
 				}
 			},
 			//// ------------------ ////
@@ -391,7 +397,7 @@
 					a5 =  1.061405429,
 					erf = 1-(((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-z*z),
 					sign = 1;
-				if(z < 0) sign = -1;
+				if (z < 0) sign = -1;
 				return (1/2)*(1+sign*erf);
 			},
 			// Collection of smoothing functions
@@ -435,8 +441,8 @@
 				.append($('<div />', { 'class': 'paver__meta' }));
 
 				// If metadata is present, and enabled
-				if(paver.settings.meta &&
-					(paver.$p.attr('title') !== undefined || paver.$p.attr('alt') !== undefined) &&
+				if (paver.settings.meta &&
+					(paver.$p.attr('title') !== void 0 || paver.$p.attr('alt') !== void 0) &&
 					(paver.$p.attr('title').length || paver.$p.attr('alt').length)
 				) {
 					paver.$t
@@ -485,7 +491,7 @@
 			},
 			checkOverflow: function(paver) {
 				// Check if we really need to bind events
-				if(
+				if (
 					paver.instanceData.containerAspectRatio <= paver.instanceData.panoAspectRatio &&
 					paver.instanceData.outerWidth <= paver.instanceData.computedWidth - paver.settings.minimumOverflow
 				) return true;
@@ -504,20 +510,24 @@
 				// Turn off paver
 				paver.unbindEvents(paver);
 
-				// If responsiveness is desired, we resize panorama to fill the original parent container
-				if(paver.settings.responsive === true) {
-					if(paver.instanceData.naturalWidth > paver.instanceData.outerWidth) {
-						paver.$t
-						.css('min-height', paver.instanceData.outerWidth/paver.instanceData.panoAspectRatio)
-						.find('div.paver__pano')
-							.css({
-								width: paver.instanceData.outerWidth,
-								height: '100%',
-								left: '50%',
-								transform: 'translateX(-50%)'
-							});
-					}
-				}
+				// If responsiveness is not set, do nothing
+				if (!paver.settings.responsive)
+					return;
+
+				// If the panorama's natural width is not larger enough to fill element, do nothing
+				if (paver.instanceData.naturalWidth <= paver.instanceData.outerWidth)
+					return;
+
+				// Otherwise, we resize panorama to fill the original parent container
+				paver.$t
+				.css('min-height', paver.instanceData.outerWidth/paver.instanceData.panoAspectRatio)
+				.find('div.paver__pano')
+					.css({
+						width: paver.instanceData.outerWidth,
+						height: '100%',
+						left: '50%',
+						transform: 'translateX(-50%)'
+					});
 			},
 			compute: function(paver) {
 				// Get computed dimensions
@@ -538,8 +548,8 @@
 			},
 			// Generic handler to bind all events
 			bindEvents: function(paver) {
-				if(globalData.features.isTouch) {
-					if(globalData.features.hasGyroscope && paver.settings.tilt){
+				if (globalData.features.isTouch) {
+					if (globalData.features.hasGyroscope && paver.settings.tilt){
 						_fun.bindOrientationEvents(paver);
 					}
 				} else {
@@ -558,22 +568,23 @@
 
 					// Define smoothing function
 					var smooth;
-					if(typeof paver.settings.mouseSmoothingFunction === 'string') {
+					if (typeof paver.settings.mouseSmoothingFunction === 'string') {
 						_fun.defaultSmooth(paver, paver.settings.mouseSmoothingFunction, paver.mousemove.dX, paver.instanceData.centerX, paver.mousemove.dY, paver.instanceData.centerY);
-					} else if(typeof paver.settings.mouseSmoothingFunction === 'function') {
+					} else if (typeof paver.settings.mouseSmoothingFunction === 'function') {
 						// Make call to custom smoothing function
 						var customPos = paver.settings.mouseSmoothingFunction.call(paver, paver.mousemove.dX, paver.instanceData.centerX, paver.mousemove.dY, paver.instanceData.centerY);
 
-						// Sanity check
-						if(customPos !== undefined) {
-							// Set transform
-							paver.pan({
-								xPos: customPos.x,
-								yPos: customPos.y
-							});
-						} else {
+						// If custom position is undefined, fallback to default smoothing
+						if (customPos === void 0) {
 							_fun.defaultSmooth(paver, defaults.settings.mouseSmoothingFunction, paver.mousemove.dX, paver.instanceData.centerX, paver.mousemove.dY, paver.instanceData.centerY);
+							return;
 						}
+
+						// Set transform
+						paver.pan({
+							xPos: customPos.x,
+							yPos: customPos.y
+						});
 					}
 
 					
@@ -591,13 +602,13 @@
 				paver.$t.on('devicetilt.paver', $.throttle(paver.settings.gyroscopeThrottle, function(e, tilt) {
 					
 					// Is scroller persistence turned on?
-					if(paver.settings.tiltScrollerPersistence === 0) {
+					if (paver.settings.tiltScrollerPersistence === 0) {
 						// We want scroller to appear all the time
 						paver.$t.addClass('paver--tilting');
 					} else {
 						// We only want to conditionally enable scroller
 						// Is the tilting beyond a threshold?
-						if(
+						if (
 							// We accept both cases:
 							// 1. When previous tilt data is available, make sure that the difference is beyond tiltSensitivity
 							// 2. When previous tilt data is unavailable, go right ahead
@@ -610,7 +621,7 @@
 						) {
 							// Paver is tilting, so we show the scroller
 							paver.$t.addClass('paver--tilting');
-							if(scrollerTimer !== null) {
+							if (scrollerTimer !== null) {
 								clearTimeout(scrollerTimer);
 							}
 							scrollerTimer = window.setTimeout(function() {
@@ -677,22 +688,23 @@
 							var smooth;
 
 							// Check if custom smoothing function
-							if(typeof paver.settings.tiltSmoothingFunction === 'string') {
+							if (typeof paver.settings.tiltSmoothingFunction === 'string') {
 								_fun.defaultSmooth(paver, paver.settings.tiltSmoothingFunction, screenTilt.gamma, tiltThreshold, screenTilt.beta,tiltThreshold);
-							} else if(typeof paver.settings.tiltSmoothingFunction === 'function') {
+							} else if (typeof paver.settings.tiltSmoothingFunction === 'function') {
 								// Make call to custom smoothing function
 								var customPos = paver.settings.mouseSmoothingFunction.call(paver, screenTilt.gamma, tiltThreshold, screenTilt.beta, tiltThreshold);
 
-								// Sanity check
-								if(customPos !== undefined) {
-									// Set transform
-									paver.pan({
-										xPos: customPos.x,
-										yPos: customPos.y
-									});
-								} else {
+								// If custom position is undefined, fallback to default smoothing
+								if (customPos === void 0) {
 									_fun.defaultSmooth(paver, paver.settings.tiltSmoothingFunction, screenTilt.gamma, tiltThreshold, screenTilt.beta,tiltThreshold);
+									return;
 								}
+
+								// Set transform
+								paver.pan({
+									xPos: customPos.x,
+									yPos: customPos.y
+								});
 							}
 							
 
@@ -723,10 +735,10 @@
 			checkURL: function(url) {
 				var exitCode = 0;
 
-				if(/[\s+]/g.test(url)) {
+				if (/[\s+]/g.test(url)) {
 					console.warn('Paver: Paver has detected characters in your URL string ('+url+') that need to be properly encoded/escaped. Whitespace(s) have to be escaped manually. See RFC3986 documentation.');
 					exitCode = 1;
-				} else if(/[\"\'\(\)]/g.test(url)) {
+				} else if (/[\"\'\(\)]/g.test(url)) {
 					console.warn('Paver: Plugin will proceed, but it has detected characters in your URL string ('+url+') that need to be properly encoded/escaped. These will be escaped for you. See RFC3986 documentation.');
 					exitCode = 0;
 				}
@@ -753,7 +765,7 @@
 				features: {
 					isTouch: false,
 					hasGyroscope: false,
-					hasScreenOrientationAPI: (window.screen && window.screen.orientation && window.screen.orientation.angle !== undefined && window.screen.orientation.angle !== null ? true : false)
+					hasScreenOrientationAPI: (window.screen && window.screen.orientation && window.screen.orientation.angle !== void 0 && window.screen.orientation.angle !== null ? true : false)
 				},
 				screenOrientationAngle: null,
 				startTilt: {}
@@ -778,7 +790,7 @@
 					var handler = function(e) {
 
 							// Check if we have any useful gyroscopic data
-							if(e.alpha !== null && e.beta !== null && e.gamma !== null) {
+							if (e.alpha !== null && e.beta !== null && e.gamma !== null) {
 								d.resolve({
 									orientation: {
 										alpha: e.alpha,
@@ -814,20 +826,18 @@
 						// DeviceOrientationEvent is fired
 						window.addEventListener('deviceorientation', handler, false);
 
-						// Firefox caveat catch
-						// Firefox exposes window.DeviceOrientationEvent even if it is incapable of feeding gyroscoping data (e.g. on desktops),
+						// Some browsers expose the window.DeviceOrientationEvent even if it is incapable of feeding gyroscopic data (e.g. on desktops),
 						// so we use a simple timeout function to check if the event is fired
-						if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
-							window.setTimeout(function() {
-								d.reject({
-									status: {
-										deviceOrientationEventSupport: true,
-										deviceOrientationData: false
-									}
-								});
-								return d.promise();
-							}, 250);
-						}
+						window.setTimeout(function() {
+							console.info('DeviceOrientationEvent support is detected, but browser is not feeding any gyroscopic data. Will not check for further gyroscopic data.');
+							d.reject({
+								status: {
+									deviceOrientationEventSupport: true,
+									deviceOrientationData: false
+								}
+							});
+							return d.promise();
+						}, 250);
 					} else {
 						
 						d.reject({
@@ -870,19 +880,19 @@
 							};
 						$t.trigger('devicetilt.paver', [t]);
 					};
-					if(globalData.features.hasGyroscope) {
+					if (globalData.features.hasGyroscope) {
 						window.addEventListener('deviceorientation', deviceOrientationHandler, false);
 					}
 
 					// Check the options parameter
 					// If it is undefined (initialization of plugin) or is an object (plugin configuration),
 					// we create a new instance of the plugin
-					if(options === undefined || typeof options === 'object') {
+					if (options === void 0 || typeof options === 'object') {
 						return $t.each(function() {
 
 							// Only if the plugin_paver data is not present,
 							// to prevent multiple instances being created
-							if(!$.data(this, 'plugin_' + pluginName)) {
+							if (!$.data(this, 'plugin_' + pluginName)) {
 
 								// Initialize plugin and store
 								$.data(this, 'plugin_' + pluginName, new Plugin(this, options));
@@ -891,18 +901,18 @@
 
 					// If it is defined, but is a string, does not start with an underscore and is not init(),
 					// we allow users to make calls to public methods
-					} else if(typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+					} else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
 						var publicMethods;
 
 						$t.each(function() {
 							// Check if plugin instance already exists, and that the 'options' string is a function name
 							var instance = $.data(this, 'plugin_' + pluginName);
-							if(instance instanceof Plugin && typeof instance[options] === 'function') {
+							if (instance instanceof Plugin && typeof instance[options] === 'function') {
 								publicMethods = instance[options].apply(instance, Array.prototype.slice.call(args,1));
 							}
 						});
 
-						return typeof publicMethods !== typeof undefined ? publicMethods : $t;
+						return publicMethods !== void 0 ? publicMethods : $t;
 					}
 					
 				},
@@ -925,7 +935,7 @@
 					},
 					no: function() {
 						// We do not have gyroscopic data
-						console.warn('Gyroscopic data unavailable. Falling back to cursor-based panning.');
+						console.info('Gyroscopic data unavailable. Falling back to cursor-based panning.');
 						globalData.features.hasGyroscope = false;
 						var gyroData = {
 							status: {
@@ -948,14 +958,15 @@
 			// Wait for gyroscopic data
 			$.when(_check.hasGyroscope()).then(function(gyroData) {
 
-				if(typeof gyroData !== typeof undefined && settings.tilt === true) {
+				// If gyroscopic data is available and tilt setting is enabled
+				if (gyroData !== void 0 && settings.tilt === true) {
 					_paverGyroData.yes(gyroData);
-				} else {
-					_paverGyroData.no();				
+					return;
 				}
 
-			}, function(gyroData) {
+				_paverGyroData.no();
 
+			}, function() {
 				_paverGyroData.no();
 			});
 
