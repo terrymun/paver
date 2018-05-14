@@ -51,16 +51,16 @@
   "devDependencies": {
     "autoprefixer": "^8.5.0",
     "cssnano": "^3.10.0",
-    "grunt": "^0.4.5",
-    "grunt-concurrent": "^2.0.3",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-contrib-uglify": "^0.11.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-postcss": "^0.7.2",
-    "grunt-sass": "^1.2.1",
-    "jshint-stylish": "^2.1.0",
-    "load-grunt-config": "^0.17.2",
-    "time-grunt": "^1.2.1"
+    "grunt": "^1.0.2",
+    "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-postcss": "^0.9.0",
+    "grunt-sass": "^2.1.0",
+    "jshint-stylish": "^2.2.1",
+    "load-grunt-config": "^0.19.2",
+    "time-grunt": "^1.4.0"
   }
 }
