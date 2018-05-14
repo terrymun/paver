@@ -2,5 +2,5 @@ language: node_js
 before_script:
   - npm update -g npm
 node_js:
-  - "5.1"
-  - "4.7"
+  - "8"
+  - "7"
