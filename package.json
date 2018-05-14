@@ -33,7 +33,7 @@
     "package.json"
   ],
   "dependencies": {
-    "jquery": ">=1.9"
+    "jquery": ">=3"
   },
   "npmName": "@terrymun/paver",
   "npmFileMap": [
